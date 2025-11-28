@@ -92,8 +92,9 @@ It provides the engine and languages used by applications such as:
 
 ---
 
-## 6. Roadmap (high‑level)
+## 6. Roadmap
 
+for Roadmap see the document specs/
 ### Phase 1
 - ER modeling DSL
 - SQL generators
