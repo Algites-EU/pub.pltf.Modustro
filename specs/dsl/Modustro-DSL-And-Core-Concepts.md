@@ -228,43 +228,43 @@ flowchart TD
     A2 --> |"TECHNICAL RELATIONSHIPS — IMPORT / USE\n(MPS import/use, thin arrows)"|C
     A3 --x |"TECHNICAL RELATIONSHIPS — EMBEDDING\n(MPS runtime dependency, x instead arrow)"|D
     A4 --> |"A4 is used and re-exported by E\n(MPS exported languages, o instead arrow)"|E
-    A5 -.-X |"A5 influences F meta-behavior\n(MPS import/use without re-export, dashed arrows)"|F
+    A5 -.-x |"A5 influences F meta-behavior\n(MPS import/use without re-export, dashed arrows)"|F
 ```
 
 ```mermaid
 flowchart LR
     subgraph Layer1[Type DSL Layer]
-        TDD["TypeDomainDSL (TDL)"]
+        TDD["TypeDomainDSL\n(TDL)"]
     end
 
     subgraph Layer2[Schema DSL Layer]
-        ASD[AbstractSchemaDSL]
-        DSD[DatabaseSchemaDSL]
-        ISD[InterchangeSchemaDSL]
+        ASD["AbstractSchemaDSL\n(ASD)"]
+        DSD["DatabaseSchemaDSL\n(DSD)"]
+        ISD["InterchangeSchemaDSL\n(ISD)"]
     end
 
     subgraph Layer3[Behavior DSL Layer]
   %%      subgraph Layer3_1[Field & Value Behavior]
-            EBD[EssentialBehaviorDSL]
+            EBD["EssentialBehaviorDSL\n(EBD)"]
     %%        end
 
     %%        subgraph Layer3_2[Schema Behavior]
-            SBD["SchemaBehaviorDSL (SBD)"]
+            SBD["SchemaBehaviorDSL\n(SBD)"]
     %%        end
 
     %%        subgraph Layer3_3[Business Logic]
-            BBD["BusinessBehaviorDSL (BBD)"]
+            BBD["BusinessBehaviorDSL\n(BBD)"]
     %%        end
     end
 
     subgraph Layer4[Profiles DSL Layer]
-        APD["AbstractProfileDSL (APD)"]
-        SDbPD[SpecificDbProfileDSL]
-        SIcPD[SpecificIcProfileDSL]
+        APD["AbstractProfileDSL\n(APD)"]
+        SDbPD["Example:\nSpecificDbProfileDSL"]
+        SIcPD["Example:\nSpecificIcProfileDSL"]
     end
 
     subgraph Layer5[Meta DSL Layer]
-        MBD["MetaBehaviorDSL (MBD)"]
+        MBD["MetaBehaviorDSL\n(MBD)"]
     end
 
 
@@ -293,9 +293,8 @@ flowchart LR
     DSD -->|uses types from| TDD
     ISD -->|uses types from| TDD
     
-    SBD -->|uses structures from| ASD
+    SBD ---->|uses structures from| ASD
     BBD -->|uses structures from| ASD
-    
     APD -->|uses business\nmodel from| BBD
 
 
@@ -316,24 +315,24 @@ flowchart LR
     %% ================================================================
     %% TECHNICAL RELATIONSHIPS — USAGE+RE-EXPORTS (exported languages)
     %% ================================================================
-    TDD ---o|re-exports types| ASD
-    EBD ---o|re-exports core constraints| SBD
-    BBD ---o|re-exports business logic| APD 
+    TDD --o|re-exports types| ASD
+    EBD --o|re-exports core constraints| SBD
+    BBD --o|re-exports business logic| APD 
 
 
     %% ================================================================
     %% META BEHAVIOR — ANALYSIS & RULES (dashed arrows)
     %% ================================================================
-    MBD -.-x|MBD analyzes & constrains TDD| TDD
-    MBD -.-x|MBD analyzes & constrains EBD| EBD
-    MBD -.-x|MBD analyzes & constrains ASD| ASD
-    MBD -.-x|MBD analyzes & constrains DSD| DSD
-    MBD -.-x|MBD analyzes & constrains ISD| ISD
-    MBD -.-x|MBD analyzes & constrains SBD| SBD
-    MBD -.-x|MBD analyzes & constrains BBD| BBD
-    MBD -.-x|MBD analyzes & constrains APD| APD
-    MBD -.-x|MBD analyzes & constrains SDbPD| SDbPD
-    MBD -.-x|MBD analyzes & constrains SIcPD| SIcPD
+    MBD -.-x|MBD analyzes\n& constrains TDD| TDD
+    MBD -.-x|MBD analyzes\n& constrains EBD| EBD
+    MBD -.-x|MBD analyzes\n& constrains ASD| ASD
+    MBD -.-x|MBD analyzes\n& constrains DSD| DSD
+    MBD -.-x|MBD analyzes\n& constrains ISD| ISD
+    MBD -.-x|MBD analyzes\n& constrains SBD| SBD
+    MBD -.-x|MBD analyzes\n& constrains BBD| BBD
+    MBD -.-x|MBD analyzes\n& constrains APD| APD
+    MBD -.-x|MBD analyzes\n& constrains SDbPD| SDbPD
+    MBD -.-x|MBD analyzes\n& constrains SIcPD| SIcPD
     
 ```
 
@@ -341,81 +340,143 @@ flowchart LR
 
 
 
-```mermaid
-graph TD
-    %% Hierarchy layer blocks
-    subgraph Layer1[Type DSL Layer]
-        TDD["TypeDomainDSL (TDL)"]
-    end
+[//]: # (```mermaid)
 
-    subgraph Layer2[Schema DSL Layer]
-        ASD[AbstractSchemaDSL]
-        DSD[DatabaseSchemaDSL]
-        ISD[InterchangeSchemaDSL]
-    end
+[//]: # (graph TD)
 
-    subgraph Layer3[Behavior DSL Layer]
-        subgraph Layer3_1[Field & Value Behavior]
-            EBD[EssentialBehaviorDSL]
-        end
-    
-        subgraph Layer3_2[Schema Behavior]
-            SBD["SchemaBehaviorDSL (SBD)"]
-        end
-    
-        subgraph Layer3_3[Business Logic]
-            BBD["BusinessBehaviorDSL (BBD)"]
-        end
-    end
+[//]: # (    %% Hierarchy layer blocks)
 
-    subgraph Layer4[Profiles DSL Layer]
-        APD["AbstractProfileDSL (APD)"]
-        SDbPD[SpecificDbProfileDSL]
-        SIcPD[SpecificIcProfileDSL]
-    end
+[//]: # (    subgraph Layer1[Type DSL Layer])
 
-    subgraph Layer5[Meta DSL Layer]
-        MBD["MetaBehaviorDSL (MBD)"]
-    end
+[//]: # (        TDD["TypeDomainDSL &#40;TDL&#41;"])
 
-  %% Dependency edges
-    %% Type + basic dependencies
-    EBD -->|uses types from| TDD
-    ASD -->|uses types from| TDD
-    DSD -->|uses types from| TDD
-    ISD -->|uses types from| TDD
+[//]: # (    end)
 
-    %% Schema specializations
-    DSD ==>|extends| ASD
-    ISD ==>|extends| ASD
+[//]: # ()
+[//]: # (    subgraph Layer2[Schema DSL Layer])
 
-    %% Schema behavior
-    SBD -->|uses structures from| ASD
-    SBD ==>|inherits behavior from| EBD
+[//]: # (        ASD[AbstractSchemaDSL])
 
-    %% Business behavior
-    BBD ==>|inherits schema behavior from| SBD
-    BBD -->|uses structures from| ASD
+[//]: # (        DSD[DatabaseSchemaDSL])
 
-    %% Profiles
-    APD -->|uses business\nmodel from| BBD
-    SDbPD ==>|inherits structures from| APD
-    SDbPD ==>|inherits DB structures from| DSD
-    SIcPD ==>|inherits structures from| APD
-    SIcPD ==>|inherits IC structures from| ISD
+[//]: # (        ISD[InterchangeSchemaDSL])
 
-    %% Meta behavior – reads models & defines rules that affect them
-    MBD -.->|analyzes & constrains| TDD
-    MBD -.->|analyzes & constrains| EBD
-    MBD -.->|analyzes & constrains| ASD
-    MBD -.->|analyzes & constrains| DSD
-    MBD -.->|analyzes & constrains| ISD
-    MBD -.->|analyzes & constrains| SBD
-    MBD -.->|analyzes & constrains| BBD
-    MBD -.->|analyzes & constrains| APD
-    MBD -.->|analyzes & constrains| SDbPD
-    MBD -.->|analyzes & constrains| SIcPD
-```
+[//]: # (    end)
+
+[//]: # ()
+[//]: # (    subgraph Layer3[Behavior DSL Layer])
+
+[//]: # (        subgraph Layer3_1[Field & Value Behavior])
+
+[//]: # (            EBD[EssentialBehaviorDSL])
+
+[//]: # (        end)
+
+[//]: # (    )
+[//]: # (        subgraph Layer3_2[Schema Behavior])
+
+[//]: # (            SBD["SchemaBehaviorDSL &#40;SBD&#41;"])
+
+[//]: # (        end)
+
+[//]: # (    )
+[//]: # (        subgraph Layer3_3[Business Logic])
+
+[//]: # (            BBD["BusinessBehaviorDSL &#40;BBD&#41;"])
+
+[//]: # (        end)
+
+[//]: # (    end)
+
+[//]: # ()
+[//]: # (    subgraph Layer4[Profiles DSL Layer])
+
+[//]: # (        APD["AbstractProfileDSL &#40;APD&#41;"])
+
+[//]: # (        SDbPD[SpecificDbProfileDSL])
+
+[//]: # (        SIcPD[SpecificIcProfileDSL])
+
+[//]: # (    end)
+
+[//]: # ()
+[//]: # (    subgraph Layer5[Meta DSL Layer])
+
+[//]: # (        MBD["MetaBehaviorDSL &#40;MBD&#41;"])
+
+[//]: # (    end)
+
+[//]: # ()
+[//]: # (  %% Dependency edges)
+
+[//]: # (    %% Type + basic dependencies)
+
+[//]: # (    EBD -->|uses types from| TDD)
+
+[//]: # (    ASD -->|uses types from| TDD)
+
+[//]: # (    DSD -->|uses types from| TDD)
+
+[//]: # (    ISD -->|uses types from| TDD)
+
+[//]: # ()
+[//]: # (    %% Schema specializations)
+
+[//]: # (    DSD ==>|extends| ASD)
+
+[//]: # (    ISD ==>|extends| ASD)
+
+[//]: # ()
+[//]: # (    %% Schema behavior)
+
+[//]: # (    SBD -->|uses structures from| ASD)
+
+[//]: # (    SBD ==>|inherits behavior from| EBD)
+
+[//]: # ()
+[//]: # (    %% Business behavior)
+
+[//]: # (    BBD ==>|inherits schema behavior from| SBD)
+
+[//]: # (    BBD -->|uses structures from| ASD)
+
+[//]: # ()
+[//]: # (    %% Profiles)
+
+[//]: # (    APD -->|uses business\nmodel from| BBD)
+
+[//]: # (    SDbPD ==>|inherits structures from| APD)
+
+[//]: # (    SDbPD ==>|inherits DB structures from| DSD)
+
+[//]: # (    SIcPD ==>|inherits structures from| APD)
+
+[//]: # (    SIcPD ==>|inherits IC structures from| ISD)
+
+[//]: # ()
+[//]: # (    %% Meta behavior – reads models & defines rules that affect them)
+
+[//]: # (    MBD -.->|analyzes & constrains| TDD)
+
+[//]: # (    MBD -.->|analyzes & constrains| EBD)
+
+[//]: # (    MBD -.->|analyzes & constrains| ASD)
+
+[//]: # (    MBD -.->|analyzes & constrains| DSD)
+
+[//]: # (    MBD -.->|analyzes & constrains| ISD)
+
+[//]: # (    MBD -.->|analyzes & constrains| SBD)
+
+[//]: # (    MBD -.->|analyzes & constrains| BBD)
+
+[//]: # (    MBD -.->|analyzes & constrains| APD)
+
+[//]: # (    MBD -.->|analyzes & constrains| SDbPD)
+
+[//]: # (    MBD -.->|analyzes & constrains| SIcPD)
+
+[//]: # (```)
 
 ---
 
