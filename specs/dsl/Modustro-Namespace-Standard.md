@@ -153,6 +153,8 @@ Following chapters form some examples of the usage of the namespaces in specific
 	mdstr.meta.mdl:meGuid="fc12-438b-9921"
 	mdstr.meta.mdl:meHlc="2025-03-01T09:30:55Z-7"
 	mdstr.meta.audit:authorRef="AUTH-001">
+	<!-- meAncestorGuid is the GUID of the ancestor, so in this case, 
+         of the object mdstr.dsl.asd:Entity: -->
 	<mdstr.dsl.dsd:Table
 		mdstr.meta.mdl:meGuid="fc12-438b-AX21"
 		mdstr.meta.mdl:meHlc="2025-03-01T09:30:55Z-7"
