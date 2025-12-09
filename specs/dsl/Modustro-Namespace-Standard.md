@@ -152,30 +152,30 @@ Following chapters form some examples of the usage of the namespaces in specific
 <mdstr.dsl.dsd:TableList
 	mdstr.meta.mdl:meGuid="fc12-438b-9921"
 	mdstr.meta.mdl:meHlc="2025-03-01T09:30:55Z-7"
-	mdstr.meta.audit:authorRef="AUTH-001">
+	mdstr.meta.audit:auditSealGuid="ASG-001">
 	<!-- meAncestorGuid is the GUID of the ancestor, so in this case, 
          of the object mdstr.dsl.asd:Entity: -->
 	<mdstr.dsl.dsd:Table
 		mdstr.meta.mdl:meGuid="fc12-438b-AX21"
 		mdstr.meta.mdl:meHlc="2025-03-01T09:30:55Z-7"
 		mdstr.meta.mdl:meAncestorGuid="fc12-438b-9926"
-		mdstr.meta.audit:authorRef="AUTH-001">
+		mdstr.meta.audit:auditSealGuid="ASG-001">
 		<!-- Order of the elements inside the Column element 
           is given by the meGuid of every subelement independently of their name -->
 		<mdstr.dsl.dsd:TableName
 			mdstr.meta.mdl:meGuid="cacc-8ffb"
 			mdstr.meta.mdl:meHlc="2025-03-01T09:31:10Z-3"
-			mdstr.meta.audit:authorRef="AUTH-001">CUSTOMER</mdstr.dsl.dsd:TableName>
+			mdstr.meta.audit:auditSealGuid="ASG-001">CUSTOMER</mdstr.dsl.dsd:TableName>
 		<mdstr.dsl.dsd:TableName
 			mdstr.meta.mdl:meGuid="cacc-8ffc"
 			mdstr.meta.mdl:meHlc="2025-03-01T09:31:11Z-1"
-			mdstr.meta.audit:authorRef="AUTH-002">COMPANY_CUSTOMER</mdstr.dsl.dsd:TableName>
+			mdstr.meta.audit:auditSealGuid="ASG-002">COMPANY_CUSTOMER</mdstr.dsl.dsd:TableName>
 
 		<!-- this element cannot be here 
         <mdstr.meta.mdl:MeOrder
             mdstr.meta.mdl:meGuid="cacc-8ffe"
             mdstr.meta.mdl:meHlc="2025-03-01T09:31:10Z-3"
-            mdstr.meta.audit:authorRef="AUTH-002">my</mdstr.meta.mdl:MeOrder>
+            mdstr.meta.audit:auditSealGuid="ASG-002">my</mdstr.meta.mdl:MeOrder>
         since it has the meGuid="cacc-8ffe" lexicographically higher than the next 
         item TableComment, which has meGuid="cacc-8ffd" and "cacc-8ffd" < "cacc-8ffe"
         so element with guid meGuid="cacc-8ffd" must be before the element with meGuid="cacc-8ffe"  
@@ -183,33 +183,33 @@ Following chapters form some examples of the usage of the namespaces in specific
 		<mdstr.dsl.dsd:TableComment
 			mdstr.meta.mdl:meGuid="cacc-8ffd"
 			mdstr.meta.mdl:meHlc="2025-03-01T09:31:10Z-3"
-			mdstr.meta.audit:authorRef="AUTH-002">This is table customer</mdstr.dsl.dsd:TableComment>
+			mdstr.meta.audit:auditSealGuid="ASG-002">This is table customer</mdstr.dsl.dsd:TableComment>
 
 		<mdstr.meta.mdl:MeOrder
 			mdstr.meta.mdl:meGuid="cacc-8ffe"
 			mdstr.meta.mdl:meHlc="2025-03-01T09:31:10Z-3"
-			mdstr.meta.audit:authorRef="AUTH-002">my</mdstr.meta.mdl:MeOrder>
+			mdstr.meta.audit:auditSealGuid="ASG-002">my</mdstr.meta.mdl:MeOrder>
 	</mdstr.dsl.dsd:Table>
 </mdstr.dsl.dsd:TableList>
 
 <mdstr.dsl.dsd:TableSpace
 mdstr.meta.mdl:meGuid="TBLSPC-001A"
 mdstr.meta.mdl:meHlc="2025-02-18T10:05:00Z-3"
-mdstr.meta.audit:authorRef="AUTH-001">
+mdstr.meta.audit:auditSealGuid="ASG-001">
 
 <mdstr.dsl.dsd:TableSpaceName
 	mdstr.meta.mdl:meGuid="TN-001A"
 	mdstr.meta.mdl:meHlc="2025-02-18T10:05:00Z-3"
-	mdstr.meta.audit:authorRef="AUTH-001">TBLSPACE_OLD</mdstr.dsl.dsd:TableSpaceName>
+	mdstr.meta.audit:auditSealGuid="ASG-001">TBLSPACE_OLD</mdstr.dsl.dsd:TableSpaceName>
 
 <mdstr.dsl.dsd:TableRefList
 	mdstr.meta.mdl:meGuid="fc12-438b-99D1A"
 	mdstr.meta.mdl:meHlc="2025-03-01T09:30:55Z-7"
-	mdstr.meta.audit:authorRef="AUTH-001">
+	mdstr.meta.audit:auditSealGuid="ASG-001">
 	<mdstr.dsl.dsd:TableRef
 		mdstr.meta.mdl:meGuid="fc12-438b-9X21A"
 		mdstr.meta.mdl:meHlc="2025-03-01T09:30:55Z-7"
-		mdstr.meta.audit:authorRef="AUTH-001"
+		mdstr.meta.audit:auditSealGuid="ASG-001"
 		mdstr.dsl.tdd:refMeGuid="fc12-438b-AX21">
 
 		<!-- This element indicates, this table is no longer in the given tablespace list,
@@ -221,7 +221,7 @@ mdstr.meta.audit:authorRef="AUTH-001">
 		<mdstr.meta.mdl:MeOrder
 			mdstr.meta.mdl:meGuid="cacc-8ffeQA"
 			mdstr.meta.mdl:meHlc="2025-03-01T12:31:10Z-3"
-			mdstr.meta.audit:authorRef="AUTH-002">my</mdstr.meta.mdl:MeOrder>
+			mdstr.meta.audit:auditSealGuid="ASG-002">my</mdstr.meta.mdl:MeOrder>
 
 	</mdstr.dsl.dsd:TableRef>
 </mdstr.dsl.dsd:TableRefList>
@@ -231,28 +231,28 @@ mdstr.meta.audit:authorRef="AUTH-001">
 <mdstr.dsl.dsd:TableSpace
 	mdstr.meta.mdl:meGuid="TBLSPC-001"
 	mdstr.meta.mdl:meHlc="2025-02-18T10:05:00Z-3"
-	mdstr.meta.audit:authorRef="AUTH-001">
+	mdstr.meta.audit:auditSealGuid="ASG-001">
 
 	<mdstr.dsl.dsd:TableSpaceName
 		mdstr.meta.mdl:meGuid="TN-001"
 		mdstr.meta.mdl:meHlc="2025-02-18T10:05:00Z-3"
-		mdstr.meta.audit:authorRef="AUTH-001">TBLSPACE_MAIN</mdstr.dsl.dsd:TableSpaceName>
+		mdstr.meta.audit:auditSealGuid="ASG-001">TBLSPACE_MAIN</mdstr.dsl.dsd:TableSpaceName>
 
 	<mdstr.dsl.dsd:TableRefList
 		mdstr.meta.mdl:meGuid="fc12-438b-99D1"
 		mdstr.meta.mdl:meHlc="2025-03-01T09:30:55Z-7"
-		mdstr.meta.audit:authorRef="AUTH-001">
+		mdstr.meta.audit:auditSealGuid="ASG-001">
         <mdstr.dsl.dsd:TableRef
             mdstr.meta.mdl:meGuid="fc12-438b-9X21"
             mdstr.meta.mdl:meHlc="2025-03-01T09:30:55Z-7"
-			mdstr.meta.audit:authorRef="AUTH-001"
+			mdstr.meta.audit:auditSealGuid="ASG-001"
 			mdstr.dsl.tdd:refMeGuid="fc12-438b-AX21">
 
             <!-- this element cannot be here 
 			<mdstr.meta.mdl:MeOrder
                 mdstr.meta.mdl:meGuid="cacc-8ffeQ"
                 mdstr.meta.mdl:meHlc="2025-03-01T09:31:10Z-3"
-				mdstr.meta.audit:authorRef="AUTH-002">my</mdstr.meta.mdl:MeOrder>
+				mdstr.meta.audit:auditSealGuid="ASG-002">my</mdstr.meta.mdl:MeOrder>
             since it has the meGuid="cacc-8ffeQ" lexicographically higher than the next 
             item MeRelocated, which has meGuid="aa37-c41fQ" and "aa37-c41fQ" < "cacc-8ffeQ"
             so element with guid meGuid="aa37-c41fQ" must be before the element with meGuid="cacc-8ffeQ"  
@@ -272,7 +272,7 @@ mdstr.meta.audit:authorRef="AUTH-001">
 			<mdstr.meta.mdl:MeOrder
 				mdstr.meta.mdl:meGuid="cacc-8ffeQ"
 				mdstr.meta.mdl:meHlc="2025-03-01T12:31:10Z-3"
-				mdstr.meta.audit:authorRef="AUTH-002">my</mdstr.meta.mdl:MeOrder>
+				mdstr.meta.audit:auditSealGuid="ASG-002">my</mdstr.meta.mdl:MeOrder>
 
 		</mdstr.dsl.dsd:TableRef>
     </mdstr.dsl.dsd:TableRefList>    
@@ -282,27 +282,27 @@ mdstr.meta.audit:authorRef="AUTH-001">
 <mdstr.dsl.dsd:TableSpace
 mdstr.meta.mdl:meGuid="TBLSPC-002"
 mdstr.meta.mdl:meHlc="2025-02-18T10:05:00Z-3"
-mdstr.meta.audit:authorRef="AUTH-001">
+mdstr.meta.audit:auditSealGuid="ASG-001">
 
 <mdstr.dsl.dsd:TableSpaceName
 	mdstr.meta.mdl:meGuid="TN-002"
 	mdstr.meta.mdl:meHlc="2025-02-18T10:05:00Z-3"
-	mdstr.meta.audit:authorRef="AUTH-001">TBLSPACE_SECONDARY</mdstr.dsl.dsd:TableSpaceName>
+	mdstr.meta.audit:auditSealGuid="ASG-001">TBLSPACE_SECONDARY</mdstr.dsl.dsd:TableSpaceName>
 
 <mdstr.dsl.dsd:TableRefList
 	mdstr.meta.mdl:meGuid="fc12-438b-99D1W"
 	mdstr.meta.mdl:meHlc="2025-03-01T09:30:55Z-7"
-	mdstr.meta.audit:authorRef="AUTH-001">
+	mdstr.meta.audit:auditSealGuid="ASG-001">
 	<mdstr.dsl.dsd:TableRef
 		mdstr.meta.mdl:meGuid="fc12-438b-9X21W"
 		mdstr.meta.mdl:meHlc="2025-03-01T09:30:55Z-7"
-		mdstr.meta.audit:authorRef="AUTH-001"
+		mdstr.meta.audit:auditSealGuid="ASG-001"
 		mdstr.dsl.tdd:refMeGuid="fc12-438b-AX21">
 
 		<mdstr.meta.mdl:MeOrder
 			mdstr.meta.mdl:meGuid="cacc-8ffeW"
 			mdstr.meta.mdl:meHlc="2025-03-01T09:31:10Z-3"
-			mdstr.meta.audit:authorRef="AUTH-002">my</mdstr.meta.mdl:MeOrder>
+			mdstr.meta.audit:auditSealGuid="ASG-002">my</mdstr.meta.mdl:MeOrder>
 
 	</mdstr.dsl.dsd:TableRef>
 </mdstr.dsl.dsd:TableRefList>
@@ -427,21 +427,21 @@ Example:
 	mdstr.meta.mdl:meGuid="fc12-438b-9921e"
 	mdstr.meta.mdl:meHlc="2025-03-01T09:30:55Z-7"
 	mdstr.meta.mdl:meAncestorGuid="fc12-438b-9926f"
-	mdstr.meta.audit:authorRef="AUTH-001">
+	mdstr.meta.audit:auditSealGuid="ASG-001">
         <mdstr.dsl.asd:Field
 	mdstr.meta.mdl:meGuid="fc12-438b-9921"
 	mdstr.meta.mdl:meHlc="2025-03-01T09:30:55Z-7"
 	mdstr.meta.mdl:meAncestorGuid="fc12-438b-9926"
-	mdstr.meta.audit:authorRef="AUTH-001">
+	mdstr.meta.audit:auditSealGuid="ASG-001">
 
 	<mdstr.dsl.asd:FieldName
 		mdstr.meta.mdl:meGuid="cacc-8ffb"
 		mdstr.meta.mdl:meHlc="2025-03-01T09:31:10Z-3"
-		mdstr.meta.audit:authorRef="AUTH-001">NAME</mdstr.dsl.asd:FieldName>
+		mdstr.meta.audit:auditSealGuid="ASG-001">NAME</mdstr.dsl.asd:FieldName>
 	<mdstr.dsl.asd:FieldName
 		mdstr.meta.mdl:meGuid="cacc-8ffc"
 		mdstr.meta.mdl:meHlc="2025-03-01T09:31:11Z-1"
-		mdstr.meta.audit:authorRef="AUTH-002">FIRST_NAME</mdstr.dsl.asd:FieldName>
+		mdstr.meta.audit:auditSealGuid="ASG-002">FIRST_NAME</mdstr.dsl.asd:FieldName>
 
 	<mdstr.dsl.asd:FieldType
 		mdstr.meta.mdl:meGuid="cacc-8ffb1"
@@ -494,7 +494,7 @@ Example:
 
 ```xml
 <mdstr.meta.prj:Project
-    mdstr.meta.audit:authorRef="USR-GUID-001"
+    mdstr.meta.audit:auditSealGuid="ASG-GUID-001"
     mdstr.meta.prj:createdAt="2025-11-29"
     mdstr.meta.prj:platformVersion="1.0"
 	mdstr.meta.prj:projectFormatVersion="1.0">
@@ -517,11 +517,11 @@ https://modustro.eu/xmldefs/metadata/auditing
 
 Responsibilities:
 
-- local author registry:
-    - `<audit:Authors>`
-    - `<audit:Author guid="AUTH-001" systemUser="..." machineName="..."/>`
+- local context seal registry:
+    - `<audit:AuditSealList>`
+    - `<audit:AuditSeal guid="ORGN-001" systemUser="..." machineName="..."/>`
 - audit reference attributes:
-    - `audit:authorRef` on elements and property values
+    - `audit:auditSealGuid` on elements and property values
 
 Notes:
 
@@ -553,21 +553,21 @@ Example:
 mdstr.meta.mdl:meGuid="fc12-438b-9921e"
 mdstr.meta.mdl:meHlc="2025-03-01T09:30:55Z-7"
 mdstr.meta.mdl:meAncestorGuid="fc12-438b-9926f"
-mdstr.meta.audit:authorRef="AUTH-001">
+mdstr.meta.audit:auditSealGuid="ASG-001">
        <mdstr.dsl.asd:ProfileRule
 	mdstr.meta.mdl:meGuid="fc12-438b-9921"
 	mdstr.meta.mdl:meHlc="2025-03-01T09:30:55Z-7"
 	mdstr.meta.mdl:meAncestorGuid="fc12-438b-9926"
-	mdstr.meta.audit:authorRef="AUTH-001">
+	mdstr.meta.audit:auditSealGuid="ASG-001">
 
 	<mdstr.dsl.asd:ProfileRuleName
 		mdstr.meta.mdl:meGuid="cacc-8ffb"
 		mdstr.meta.mdl:meHlc="2025-03-01T09:31:10Z-3"
-		mdstr.meta.audit:authorRef="AUTH-001">First profile rule</mdstr.dsl.asd:ProfileRuleName>
+		mdstr.meta.audit:auditSealGuid="ASG-001">First profile rule</mdstr.dsl.asd:ProfileRuleName>
 	<mdstr.dsl.asd:ProfileRuleName
 		mdstr.meta.mdl:meGuid="cacc-8ffc"
 		mdstr.meta.mdl:meHlc="2025-03-01T09:31:11Z-1"
-		mdstr.meta.audit:authorRef="AUTH-002">Add automatically generated Profile Id</mdstr.dsl.asd:ProfileRuleName>
+		mdstr.meta.audit:auditSealGuid="ASG-002">Add automatically generated Profile Id</mdstr.dsl.asd:ProfileRuleName>
 
 	<mdstr.dsl.asd:ProfileRuleType
 		mdstr.meta.mdl:meGuid="cacc-8ffb1"
@@ -940,19 +940,19 @@ This ensures a round-trip between XML and JSON without losing namespace semantic
     xmlns:audit="https://modustro.eu/xmldefs/metadata/auditing"
     mdl:meGuid="59fdbf05-b9c8-4f32-bb7c-88d2a83f5a13"
     mdl:meHlc="2025-02-18T10:00:00Z-3"
-    audit:authorRef="AUTH-001">
+    audit:auditSealGuid="ASG-001">
 
     <TypeName
         mdl:meGuid="..."
         mdl:meHlc="2025-02-18T11:00:00Z-1"
-        audit:authorRef="AUTH-001">
+        audit:auditSealGuid="ASG-001">
         Email
     </TypeName>
 
     <TypeBase
         mdl:meGuid="..."
         mdl:meHlc="2025-02-18T11:05:00Z-1"
-        audit:authorRef="AUTH-001">
+        audit:auditSealGuid="ASG-001">
         string
     </TypeBase>
 
@@ -969,19 +969,19 @@ This ensures a round-trip between XML and JSON without losing namespace semantic
     xmlns:audit="https://modustro.eu/xmldefs/metadata/auditing"
     mdl:meGuid="ENT-001"
     mdl:meHlc="2025-02-18T10:00:00Z-3"
-    audit:authorRef="AUTH-001">
+    audit:auditSealGuid="ASG-001">
 
     <EntityName
         mdl:meGuid="..."
         mdl:meHlc="2025-02-18T10:02:00Z-3"
-        audit:authorRef="AUTH-001">
+        audit:auditSealGuid="ASG-001">
         Customer
     </EntityName>
 
     <mdl:MeOrder
         mdl:meGuid="ORD-001"
         mdl:meHlc="2025-02-18T10:05:00Z-3"
-        audit:authorRef="AUTH-001">
+        audit:auditSealGuid="ASG-001">
         m
     </mdl:MeOrder>
 
