@@ -18,38 +18,31 @@ Version **1.2** refines terminology and formalizes relations between the differe
 ## 2. Overview of DSL Architecture
 Modustro DSLs form a **five‑layer architecture**:
 
-1. **Type Layer** – reusable type domains (TDD)
-2. **Schema Layer** – abstract schema + specializations (ASD, DSD, ISD)
-3. **Behavior Layer** – validation, invariants, rules (EBD, SBD, BBD)
-4. **Profile Layer** – output targets: SQL engines, XSD, JSON, etc. (APD)
-5. **Meta Layer** – cross‑DSL compatibility, lowering rules, capability declarations (MBD)
+1. **Type Layer** – reusable type domains (TD)
+2. **Schema Layer** – abstract schema + specializations (AS, DS, IS)
+3. **Behavior Layer** – validation, invariants, rules (EB, SB, BB, MB)
+4. **Profile Layer** – output targets: SQL engines, XSD, JSON, etc. (AP)
+5. **Meta Layer** – cross‑DSL compatibility, lowering rules, capability declarations (MB)
 
 Every layer builds on top of the previous one, ensuring consistency across the whole modeling pipeline.
 
 ---
 
-### 2.1 TypeDomainDSL (TDD)
+### 2.1 TypeDomain DSL (TD)
 **Purpose:** Define reusable, named *type domains* that can be referenced from schema-level fields.
 
-TDD models include:
-- **Primitive type definitions** - primitive types used in the Type definitions string, number, boolean
-- **Type definitions** – consisting from primitive type + abstract behavior e.g., `Email`, `UUID`, `Price`, `String100`
-- **Constraints** – min/max length, ranges, regex patterns
-- **Annotations** - custom meta-properties of various structures
-@TODO - clarify what should be this one and is it here correctly? - **Primitive adapters** – mapping abstract types to primitive categories (string, number, boolean)
-- **Base categories** – numeric, textual, temporal, enumerated
-- **Inter-domain composition** – domain types can be built from other domain types (e.g., `Address = Street + City + Zip`)
+TD models include:
 
-TDD is the “type factory” of the whole Modustro ecosystem.
+TD is the “type factory” of the whole Modustro ecosystem.
 
 ---
 
-### 2.2 AbstractSchemaDSL (ASD)
+### 2.2 AbstractSchema DSL (AS)
 **Purpose:** Define a technology‑agnostic schema-level structure of entities, fields, and relationships.
 
-ASD provides:
+AS provides:
 - **Entity** – top-level schema objects
-- **Field** – referencing TDD types or other entities (abstract)
+- **Field** – referencing TD types or other entities (abstract)
 @TODO - complete description - **DomainValueField** - ?????
     - **EntityReferenceField** – foreign-key-like semantic structure
 - **Multiplicity rules** – optional, required, 1:1, 1:n, n:n
@@ -57,13 +50,13 @@ ASD provides:
 - **Physical naming proposals** – optional rules for derived names
 - **Abstract constraints** – cardinality, required fields, default values
 
-ASD is the backbone for both database schemas and interchange schemas.
+AS is the backbone for both database schemas and interchange schemas.
 
 ---
 
-### 2.3 DatabaseSchemaDSL (DSD)
-**Purpose:** Specialize ASD for relational and NoSQL database engines.  
-DSD brings structural elements needed for SQL and DB-specific generators:
+### 2.3 DatabaseSchema DSL (DS)
+**Purpose:** Specialize AS for relational and NoSQL database engines.  
+DS brings structural elements needed for SQL and DB-specific generators:
 
 - **Tables / Collections**
 - **Columns** with concrete DB types
@@ -72,58 +65,58 @@ DSD brings structural elements needed for SQL and DB-specific generators:
 - **Indices**
 - **Sequences / identity strategies**
 - **Column definitions using abstract DB types** (database-neutral),
-  DB-specific physical type mapping is handled exclusively by profiles (APD descendants)
-- @TODO: Clarify move to ASD at least not null or other simple constraint - **Check constraints**
+  DB-specific physical type mapping is handled exclusively by profiles (AP descendants)
+- @TODO: Clarify move to AS at least not null or other simple constraint - **Check constraints**
 
 This DSL does **not** perform generation; it only defines the model from which SQL generators operate.
 
 ---
 
-### 2.4 InterchangeSchemaDSL (ISD)
+### 2.4 InterchangeSchema DSL (IS)
 **Purpose:** Model structures intended for data transfer formats such as XSD, JSON Schema, Avro, OpenAPI.
 
-ISD supports:
+IS supports:
 @TODO: Clarify - **InterchangeEntity**
 @TODO: Add description - **InterchangeField** (**Elements / Properties**) - ?????
 @TODO: Clarify - **InterchangeType**
 @TODO: Clarify - **InterchangeConstraint**
-@TODO: Clarify move to ASD - **Ordering rules** (XSD-specific)
-@TODO: Clarify move to ASD, not here - **Optionality / nullability**
-@TODO: Clarify move to ASD - **Nillable vs absent**
+@TODO: Clarify move to AS - **Ordering rules** (XSD-specific)
+@TODO: Clarify move to AS, not here - **Optionality / nullability**
+@TODO: Clarify move to AS - **Nillable vs absent**
 - **Choice / group constructs**
 - **Message envelopes**
-@TODO: Clarify move to ASD at least simple constraints - **Value constraints (enum, pattern, ranges)**
+@TODO: Clarify move to AS at least simple constraints - **Value constraints (enum, pattern, ranges)**
 
-ISD is deliberately technology-agnostic; XSD constraints are handled by profiles.
+IS is deliberately technology-agnostic; XSD constraints are handled by profiles.
 
 ---
 
-### 2.5 EssentialBehaviorDSL (EBD)
-**Purpose:** Define minimal constraint metadata that bridges TDD and ASD.  
-EBD provides:
+### 2.5 EssentialBehavior DSL (EB)
+**Purpose:** Define minimal constraint metadata that bridges TD and AS.  
+EB provides:
 
 - **Field-level invariants** – min/max/range
 - **Type-level invariants** – e.g., regex for email
 - **Simple relationship constraints**
 - **Basic value rules** (must be positive, must not be empty)
 
-EBD forms the baseline for consistency checking across all DSLs.
+EB forms the baseline for consistency checking across all DSLs.
 
 ---
 
-### 2.6 SchemaBehaviorDSL (SBD)
+### 2.6 SchemaBehavior DSL (SB)
 **Purpose:** Provide schema‑specific advanced behavior:
 
-- DSD-specific constraints (e.g., FK must match PK type)
-- ISD-specific constraints (XSD nillable rules, JSON patterns)
+- DS-specific constraints (e.g., FK must match PK type)
+- IS-specific constraints (XSD nillable rules, JSON patterns)
 - Complex invariants across multiple entities
 - Precondition logic for generators
 
-SBD is built on ASD + EBD.
+SB is built on AS + EB.
 
 ---
 
-### 2.7 BusinessBehaviorDSL (BBD)
+### 2.7 BusinessBehavior DSL (BB)
 **Purpose:** Provide DDD-style behavior modeling (future extension):
 
 - Aggregates & invariants
@@ -131,14 +124,14 @@ SBD is built on ASD + EBD.
 - Domain policies
 - Message-based patterns
 
-BBD does **not** participate in core schema generation; it is optional.
+BB does **not** participate in core schema generation; it is optional.
 
 ---
 
 
-### 2.8 MetaBehaviorDSL (MBD)
+### 2.8 MetaBehavior DSL (MB)
 **Purpose:** Centralize cross‑DSL and cross‑profile meta‑behavior that cannot be expressed inside a single schema or behavior DSL.  
-MBD operates **on top of** TDD, ASD, EBD, SBD, BBD and the profile DSLs.
+MB operates **on top of** TD, AS, EB, SB, BB and the profile DSLs.
 
 Typical responsibilities:
 
@@ -149,20 +142,20 @@ Typical responsibilities:
   - specifies how rich abstract concepts (e.g., `decimal(10,2)`, `pattern`, complex multiplicities) are downgraded to simpler constructs in limited targets (e.g., Protobuf, older SQL dialects)
   - decides when to introduce *helper artifacts* (e.g., join tables, wrapper elements) to preserve semantics
 - **Cross‑DSL Consistency Rules**
-  - ensures that ISD multiplicity does not contradict ASD multiplicity
-  - validates that DSD/ISD realizations are semantically compatible with TDD/EBD constraints
+  - ensures that IS multiplicity does not contradict AS multiplicity
+  - validates that DS/IS realizations are semantically compatible with TD/EB constraints
 - **Profile Capability Declarations**
   - each profile can declare which constraint categories it can handle natively
-  - MBD uses this to drive warnings / errors / informational messages in Modustro Studio
+  - MB uses this to drive warnings / errors / informational messages in Modustro Studio
 - **Error & Warning Policies**
   - governs how Modustro Studio reports incompatibilities to the user (error vs. warning vs. informational hint)
   - enables configuration of *strict* vs *permissive* modes per project
 
-MBD does **not** introduce new user‑visible business concepts; instead, it acts as a **meta‑layer** that interprets and validates models produced by the other DSLs against concrete technology profiles.
+MB does **not** introduce new user‑visible business concepts; instead, it acts as a **meta‑layer** that interprets and validates models produced by the other DSLs against concrete technology profiles.
 
 ---
-### 2.9 AbstractProfileDSL (APD)
-**Purpose:** Define attachable profiles that adapt ASD-derived schemas to specific output targets.
+### 2.9 AbstractProfile DSL (AP)
+**Purpose:** Define attachable profiles that adapt AS-derived schemas to specific output targets.
 
 Profiles include:
 - **Activation rules** (profile enabled for entity or entire model)
@@ -178,19 +171,19 @@ Meta-language for defining behavior and structure of profiles:
 - Validation and support checks
 - Mapping configuration hooks
 
-Concrete profiles (e.g. OracleDbProfileDSL) inherit from APD.
+Concrete profiles (e.g. OracleDbProfile DSL) inherit from AP.
 
 ---
 
 ### 2.10 Concrete Profile DSLs
-Derived by combining APD with a Schema DSL:
-- **XsdIcProfileDSL** (APD + ISD)
-- **JsonIcSchemaProfileDSL** (APD + ISD)
-- **AvroIcProfileDSL** (APD + ISD)
-- **PostgresDbProfileDSL** (APD + DSD)
-- **OracleDbProfileDSL** (APD + DSD)
-- **JavaOrmProfileDSL** (APD + ASD)
-- **TypeScriptProfileDSL** (APD + ASD)
+Derived by combining AP with a Schema DSL:
+- **XsdIcProfile DSL** (AP + IS)
+- **JsonIcSchemaProfile DSL** (AP + IS)
+- **AvroIcProfile DSL** (AP + IS)
+- **PostgresDbProfile DSL** (AP + DS)
+- **OracleDbProfile DSL** (AP + DS)
+- **JavaOrmProfile DSL** (AP + AS)
+- **TypeScriptProfile DSL** (AP + AS)
 
 ---
 
@@ -203,26 +196,26 @@ The Modustro DSL ecosystem follows a structured and predictable dependency hiera
 ### 3.1. Examples of Hierarchy vs Dependency (B)
 
 #### 3.1.1 Hierarchy Example
-- TDD is the base for all types.
-- EBD adds generic behavioral rules (nullability, multiplicity…).
-- ASD builds structural entities and fields.
-- SBD models relationships and constraints between schema objects.
-- BBD adds business-level domain logic.
-- APD and SDbPD specialize schemas for profiles.
-- MBD supervises meta-consistency.
+- TD is the base for all types.
+- EB adds generic behavioral rules (nullability, multiplicity…).
+- AS builds structural entities and fields.
+- SB models relationships and constraints between schema objects.
+- BB adds business-level domain logic.
+- AP and SDbPD specialize schemas for profiles.
+- MB supervises meta-consistency.
 
 #### 3.1.2 Dependency Example
-- SBD depends on ASD (needs entities) and EBD (needs behavior).
-- BBD depends on SBD (needs relationships) and ASD (structures).
-- Profiles depend on either DSD or ISD.
-- MBD depends on everything below because it enforces compatibility.
+- SB depends on AS (needs entities) and EB (needs behavior).
+- BB depends on SB (needs relationships) and AS (structures).
+- Profiles depend on either DS or IS.
+- MB depends on everything below because it enforces compatibility.
 
 ---
 
 #### 3.1.3 Unified Hierarchy + Dependency Diagram (C)
 
 ```mermaid
-flowchart TD
+flowchart AP
     Description:
     A1 ==> |"AINHERITANCE-LIKE RELATIONSHIPS\n(conceptual design, thick arrows)"|B
     A2 --> |"TECHNICAL RELATIONSHIPS — IMPORT / USE\n(MPS import/use, thin arrows)"|C
@@ -234,105 +227,105 @@ flowchart TD
 ```mermaid
 flowchart LR
     subgraph Layer1[Type DSL Layer]
-        TDD["TypeDomainDSL\n(TDL)"]
+        TD["TypeDomain DSL\n(TDL)"]
     end
 
     subgraph Layer2[Schema DSL Layer]
-        ASD["AbstractSchemaDSL\n(ASD)"]
-        DSD["DatabaseSchemaDSL\n(DSD)"]
-        ISD["InterchangeSchemaDSL\n(ISD)"]
+        AS["AbstractSchema DSL\n(AS)"]
+        DS["DatabaseSchema DSL\n(DS)"]
+        IS["InterchangeSchema DSL\n(IS)"]
     end
 
     subgraph Layer3[Behavior DSL Layer]
   %%      subgraph Layer3_1[Field & Value Behavior]
-            EBD["EssentialBehaviorDSL\n(EBD)"]
+            EB["EssentialBehavior DSL\n(EB)"]
     %%        end
 
     %%        subgraph Layer3_2[Schema Behavior]
-            SBD["SchemaBehaviorDSL\n(SBD)"]
+            SB["SchemaBehavior DSL\n(SB)"]
     %%        end
 
     %%        subgraph Layer3_3[Business Logic]
-            BBD["BusinessBehaviorDSL\n(BBD)"]
+            BB["BusinessBehavior DSL\n(BB)"]
     %%        end
     end
 
     subgraph Layer4[Profiles DSL Layer]
-        APD["AbstractProfileDSL\n(APD)"]
-        SDbPD["Example:\nSpecificDbProfileDSL"]
-        SIcPD["Example:\nSpecificIcProfileDSL"]
+        AP["AbstractProfile DSL\n(AP)"]
+        SDbPD["Example:\nSpecificDbProfile/v1"]
+        SIcPD["Example:\nSpecificIcProfile/v1"]
     end
 
     subgraph Layer5[Meta DSL Layer]
-        MBD["MetaBehaviorDSL\n(MBD)"]
+        MB["MetaBehavior DSL\n(MB)"]
     end
 
 
 %% ================================================================
     %% LOGICAL RELATIONSHIPS (conceptual design, thick arrows)
     %% ================================================================
-    DSD ==>|inherits structures from| ASD
-    ISD ==>|inherits structures from| ASD
+    DS ==>|inherits structures from| AS
+    IS ==>|inherits structures from| AS
 
-    SBD ==>|inherits behavior from| EBD
+    SB ==>|inherits behavior from| EB
     
-    BBD ==>|inherits schema behavior from| SBD
+    BB ==>|inherits schema behavior from| SB
 
-    SDbPD ==>|inherits structures from| APD
-    SIcPD ==>|inherits structures from| APD
+    SDbPD ==>|inherits structures from| AP
+    SIcPD ==>|inherits structures from| AP
 
-    SDbPD ==>|inherits DB structures from| DSD
-    SIcPD ==>|inherits IC structures from| ISD
+    SDbPD ==>|inherits DB structures from| DS
+    SIcPD ==>|inherits IC structures from| IS
 
 
     %% ================================================================
     %% TECHNICAL RELATIONSHIPS — IMPORT / USE (thin arrows)
     %% ================================================================
-    EBD -->|uses types from| TDD
-    ASD -->|uses types from| TDD
-    DSD -->|uses types from| TDD
-    ISD -->|uses types from| TDD
+    EB -->|uses types from| TD
+    AS -->|uses types from| TD
+    DS -->|uses types from| TD
+    IS -->|uses types from| TD
     
-    SBD ---->|uses structures from| ASD
-    BBD -->|uses structures from| ASD
-    APD -->|uses business\nmodel from| BBD
+    SB ---->|uses structures from| AS
+    BB -->|uses structures from| AS
+    AP -->|uses business\nmodel from| BB
 
 
     %% ================================================================
     %% TECHNICAL RELATIONSHIPS — EMBEDDING (runtime dependency)
     %% These represent “child node allowed” or “runtime needed” dependencies
     %% ================================================================
-    ASD --x|embeds domain types| TDD
-    DSD --x|embeds domain types| TDD
-    ISD --x|embeds domain types| TDD
+    AS --x|embeds domain types| TD
+    DS --x|embeds domain types| TD
+    IS --x|embeds domain types| TD
 
-    SBD --x|embeds constraints| EBD
+    SB --x|embeds constraints| EB
 
-    APD --x|embeds behavior| BBD
-    SDbPD --x|embeds DB schema| DSD
-    SIcPD --x|embeds IC schema| ISD
+    AP --x|embeds behavior| BB
+    SDbPD --x|embeds DB schema| DS
+    SIcPD --x|embeds IC schema| IS
 
     %% ================================================================
     %% TECHNICAL RELATIONSHIPS — USAGE+RE-EXPORTS (exported languages)
     %% ================================================================
-    TDD --o|re-exports types| ASD
-    EBD --o|re-exports core constraints| SBD
-    BBD --o|re-exports business logic| APD 
+    TD --o|re-exports types| AS
+    EB --o|re-exports core constraints| SB
+    BB --o|re-exports business logic| AP 
 
 
     %% ================================================================
     %% META BEHAVIOR — ANALYSIS & RULES (dashed arrows)
     %% ================================================================
-    MBD -.-x|MBD analyzes\n& constrains TDD| TDD
-    MBD -.-x|MBD analyzes\n& constrains EBD| EBD
-    MBD -.-x|MBD analyzes\n& constrains ASD| ASD
-    MBD -.-x|MBD analyzes\n& constrains DSD| DSD
-    MBD -.-x|MBD analyzes\n& constrains ISD| ISD
-    MBD -.-x|MBD analyzes\n& constrains SBD| SBD
-    MBD -.-x|MBD analyzes\n& constrains BBD| BBD
-    MBD -.-x|MBD analyzes\n& constrains APD| APD
-    MBD -.-x|MBD analyzes\n& constrains SDbPD| SDbPD
-    MBD -.-x|MBD analyzes\n& constrains SIcPD| SIcPD
+    MB -.-x|MB analyzes\n& constrains TD| TD
+    MB -.-x|MB analyzes\n& constrains EB| EB
+    MB -.-x|MB analyzes\n& constrains AS| AS
+    MB -.-x|MB analyzes\n& constrains DS| DS
+    MB -.-x|MB analyzes\n& constrains IS| IS
+    MB -.-x|MB analyzes\n& constrains SB| SB
+    MB -.-x|MB analyzes\n& constrains BB| BB
+    MB -.-x|MB analyzes\n& constrains AP| AP
+    MB -.-x|MB analyzes\n& constrains SDbPD| SDbPD
+    MB -.-x|MB analyzes\n& constrains SIcPD| SIcPD
     
 ```
 
@@ -342,24 +335,24 @@ flowchart LR
 
 [//]: # (```mermaid)
 
-[//]: # (graph TD)
+[//]: # (graph AP)
 
 [//]: # (    %% Hierarchy layer blocks)
 
 [//]: # (    subgraph Layer1[Type DSL Layer])
 
-[//]: # (        TDD["TypeDomainDSL &#40;TDL&#41;"])
+[//]: # (        TD["TypeDomain DSL &#40;TDL&#41;"])
 
 [//]: # (    end)
 
 [//]: # ()
 [//]: # (    subgraph Layer2[Schema DSL Layer])
 
-[//]: # (        ASD[AbstractSchemaDSL])
+[//]: # (        AS[AbstractSchema DSL])
 
-[//]: # (        DSD[DatabaseSchemaDSL])
+[//]: # (        DS[DatabaseSchema DSL])
 
-[//]: # (        ISD[InterchangeSchemaDSL])
+[//]: # (        IS[InterchangeSchema DSL])
 
 [//]: # (    end)
 
@@ -368,21 +361,21 @@ flowchart LR
 
 [//]: # (        subgraph Layer3_1[Field & Value Behavior])
 
-[//]: # (            EBD[EssentialBehaviorDSL])
+[//]: # (            EB[EssentialBehavior DSL])
 
 [//]: # (        end)
 
 [//]: # (    )
 [//]: # (        subgraph Layer3_2[Schema Behavior])
 
-[//]: # (            SBD["SchemaBehaviorDSL &#40;SBD&#41;"])
+[//]: # (            SB["SchemaBehavior DSL &#40;SB&#41;"])
 
 [//]: # (        end)
 
 [//]: # (    )
 [//]: # (        subgraph Layer3_3[Business Logic])
 
-[//]: # (            BBD["BusinessBehaviorDSL &#40;BBD&#41;"])
+[//]: # (            BB["BusinessBehavior DSL &#40;BB&#41;"])
 
 [//]: # (        end)
 
@@ -391,18 +384,18 @@ flowchart LR
 [//]: # ()
 [//]: # (    subgraph Layer4[Profiles DSL Layer])
 
-[//]: # (        APD["AbstractProfileDSL &#40;APD&#41;"])
+[//]: # (        AP["AbstractProfile DSL &#40;AP&#41;"])
 
-[//]: # (        SDbPD[SpecificDbProfileDSL])
+[//]: # (        SDbPD[SpecificDbProfile DSL])
 
-[//]: # (        SIcPD[SpecificIcProfileDSL])
+[//]: # (        SIcPD[SpecificIcProfile DSL])
 
 [//]: # (    end)
 
 [//]: # ()
 [//]: # (    subgraph Layer5[Meta DSL Layer])
 
-[//]: # (        MBD["MetaBehaviorDSL &#40;MBD&#41;"])
+[//]: # (        MB["MetaBehavior DSL &#40;MB&#41;"])
 
 [//]: # (    end)
 
@@ -411,70 +404,70 @@ flowchart LR
 
 [//]: # (    %% Type + basic dependencies)
 
-[//]: # (    EBD -->|uses types from| TDD)
+[//]: # (    EB -->|uses types from| TD)
 
-[//]: # (    ASD -->|uses types from| TDD)
+[//]: # (    AS -->|uses types from| TD)
 
-[//]: # (    DSD -->|uses types from| TDD)
+[//]: # (    DS -->|uses types from| TD)
 
-[//]: # (    ISD -->|uses types from| TDD)
+[//]: # (    IS -->|uses types from| TD)
 
 [//]: # ()
 [//]: # (    %% Schema specializations)
 
-[//]: # (    DSD ==>|extends| ASD)
+[//]: # (    DS ==>|extends| AS)
 
-[//]: # (    ISD ==>|extends| ASD)
+[//]: # (    IS ==>|extends| AS)
 
 [//]: # ()
 [//]: # (    %% Schema behavior)
 
-[//]: # (    SBD -->|uses structures from| ASD)
+[//]: # (    SB -->|uses structures from| AS)
 
-[//]: # (    SBD ==>|inherits behavior from| EBD)
+[//]: # (    SB ==>|inherits behavior from| EB)
 
 [//]: # ()
 [//]: # (    %% Business behavior)
 
-[//]: # (    BBD ==>|inherits schema behavior from| SBD)
+[//]: # (    BB ==>|inherits schema behavior from| SB)
 
-[//]: # (    BBD -->|uses structures from| ASD)
+[//]: # (    BB -->|uses structures from| AS)
 
 [//]: # ()
 [//]: # (    %% Profiles)
 
-[//]: # (    APD -->|uses business\nmodel from| BBD)
+[//]: # (    AP -->|uses business\nmodel from| BB)
 
-[//]: # (    SDbPD ==>|inherits structures from| APD)
+[//]: # (    SDbPD ==>|inherits structures from| AP)
 
-[//]: # (    SDbPD ==>|inherits DB structures from| DSD)
+[//]: # (    SDbPD ==>|inherits DB structures from| DS)
 
-[//]: # (    SIcPD ==>|inherits structures from| APD)
+[//]: # (    SIcPD ==>|inherits structures from| AP)
 
-[//]: # (    SIcPD ==>|inherits IC structures from| ISD)
+[//]: # (    SIcPD ==>|inherits IC structures from| IS)
 
 [//]: # ()
 [//]: # (    %% Meta behavior – reads models & defines rules that affect them)
 
-[//]: # (    MBD -.->|analyzes & constrains| TDD)
+[//]: # (    MB -.->|analyzes & constrains| TD)
 
-[//]: # (    MBD -.->|analyzes & constrains| EBD)
+[//]: # (    MB -.->|analyzes & constrains| EB)
 
-[//]: # (    MBD -.->|analyzes & constrains| ASD)
+[//]: # (    MB -.->|analyzes & constrains| AS)
 
-[//]: # (    MBD -.->|analyzes & constrains| DSD)
+[//]: # (    MB -.->|analyzes & constrains| DS)
 
-[//]: # (    MBD -.->|analyzes & constrains| ISD)
+[//]: # (    MB -.->|analyzes & constrains| IS)
 
-[//]: # (    MBD -.->|analyzes & constrains| SBD)
+[//]: # (    MB -.->|analyzes & constrains| SB)
 
-[//]: # (    MBD -.->|analyzes & constrains| BBD)
+[//]: # (    MB -.->|analyzes & constrains| BB)
 
-[//]: # (    MBD -.->|analyzes & constrains| APD)
+[//]: # (    MB -.->|analyzes & constrains| AP)
 
-[//]: # (    MBD -.->|analyzes & constrains| SDbPD)
+[//]: # (    MB -.->|analyzes & constrains| SDbPD)
 
-[//]: # (    MBD -.->|analyzes & constrains| SIcPD)
+[//]: # (    MB -.->|analyzes & constrains| SIcPD)
 
 [//]: # (```)
 
@@ -483,18 +476,18 @@ flowchart LR
 #### 3.1.4 Hierarchical Diagram
 
 ```mermaid
-graph TD
-    TDD[TypeDomainDSL] --> EBD[EssentialBehaviorDSL]
-    EBD --> ASD[AbstractSchemaDSL]
-    ASD --> SBD[SchemaBehaviorDSL]
-    SBD --> BBD[BusinessBehaviorDSL]
-    BBD --> APD[AbstractProfileDSL]
-    APD --> SDbPD[ConcreteProfileDSL]
+graph AP
+    TD[TypeDomain DSL] --> EB[EssentialBehavior DSL]
+    EB --> AS[AbstractSchema DSL]
+    AS --> SB[SchemaBehavior DSL]
+    SB --> BB[BusinessBehavior DSL]
+    BB --> AP[AbstractProfile DSL]
+    AP --> SDbPD[ConcreteProfile DSL]
 
-    EBD -. influenced by .-> MBD[MetaBehaviorDSL]
-    SBD -. influenced by .-> MBD
-    BBD -. influenced by .-> MBD
-    SDbPD -. influenced by .-> MBD
+    EB -. influenced by .-> MB[MetaBehavior DSL]
+    SB -. influenced by .-> MB
+    BB -. influenced by .-> MB
+    SDbPD -. influenced by .-> MB
 ```
 ---
 
@@ -502,29 +495,29 @@ graph TD
 
 ```mermaid
 graph LR
-    TDD --> EBD
-    TDD --> ASD
+    TD --> EB
+    TD --> AS
 
-    EBD --> ASD
+    EB --> AS
 
-    ASD --> DSD
-    ASD --> ISD
+    AS --> DS
+    AS --> IS
 
-    EBD --> SBD
-    ASD --> SBD
+    EB --> SB
+    AS --> SB
 
-    SBD --> BBD
-    BBD --> APD
+    SB --> BB
+    BB --> AP
 
-    APD --> SDbPD
-    DSD --> SDbPD
-    ISD --> SDbPD
+    AP --> SDbPD
+    DS --> SDbPD
+    IS --> SDbPD
 
-    EBD --> MBD
-    SBD --> MBD
-    BBD --> MBD
-    APD --> MBD
-    SDbPD --> MBD
+    EB --> MB
+    SB --> MB
+    BB --> MB
+    AP --> MB
+    SDbPD --> MB
 ```
 
 ---
@@ -534,25 +527,25 @@ graph LR
 ### 3.1 Hierarchical Mermaid Diagram
 
 ```mermaid
-graph TD
-    TDD[TypeDomainDSL] --> ASD[AbstractSchemaDSL]
+graph AP
+    TD[TypeDomain DSL] --> AS[AbstractSchema DSL]
 
-    ASD --> DSD[DatabaseSchemaDSL]
-    ASD --> ISD[InterchangeSchemaDSL]
+    AS --> DS[DatabaseSchema DSL]
+    AS --> IS[InterchangeSchema DSL]
 
-    TDD --> EBD[EssentialBehaviorDSL]
-    ASD --> EBD
-    EBD --> SBD[SchemaBehaviorDSL]
-    SBD --> BBD[BusinessBehaviorDSL]
+    TD --> EB[EssentialBehavior DSL]
+    AS --> EB
+    EB --> SB[SchemaBehavior DSL]
+    SB --> BB[BusinessBehavior DSL]
 
-    MBD[MetaBehaviorDSL] --> EBD
-    MBD --> SBD
-    MBD --> BBD
-    MBD --> APD[AbstractProfileDSL]
+    MB[MetaBehavior DSL] --> EB
+    MB --> SB
+    MB --> BB
+    MB --> AP[AbstractProfile DSL]
 
-    ASD --> APD
-    DSD --> APD
-    ISD --> APD
+    AS --> AP
+    DS --> AP
+    IS --> AP
 ```
 
 ---
@@ -561,23 +554,23 @@ graph TD
 
 ```mermaid
 graph LR
-    TDD[TypeDomainDSL] --> ASD[AbstractSchemaDSL]
+    TD[TypeDomain DSL] --> AS[AbstractSchema DSL]
 
-    ASD --> DSD[DatabaseSchemaDSL]
-    ASD --> ISD[InterchangeSchemaDSL]
+    AS --> DS[DatabaseSchema DSL]
+    AS --> IS[InterchangeSchema DSL]
 
-    TDD --> EBD[EssentialBehaviorDSL]
-    ASD --> EBD
-    EBD --> SBD[SchemaBehaviorDSL]
-    SBD --> BBD[BusinessBehaviorDSL]
+    TD --> EB[EssentialBehavior DSL]
+    AS --> EB
+    EB --> SB[SchemaBehavior DSL]
+    SB --> BB[BusinessBehavior DSL]
 
-    MBD[MetaBehaviorDSL] --> EBD
-    MBD --> SBD
-    MBD --> BBD
-    MBD --> APD[AbstractProfileDSL]
+    MB[MetaBehavior DSL] --> EB
+    MB --> SB
+    MB --> BB
+    MB --> AP[AbstractProfile DSL]
 
-    ASD --> APD
-    APD --> Generators
+    AS --> AP
+    AP --> Generators
 ```
 
 ---
@@ -586,13 +579,13 @@ graph LR
 
 ```mermaid
 flowchart LR
-    TDD --> ASD
+    TD --> AS
 
-    ASD -->|specialization| DSD
-    ASD -->|specialization| ISD
+    AS -->|specialization| DS
+    AS -->|specialization| IS
 
-    DSD -->|uses profile| SQLProfiles
-    ISD -->|uses profile| XSDProfiles
+    DS -->|uses profile| SQLProfiles
+    IS -->|uses profile| XSDProfiles
 
     SQLProfiles --> SQLGen[SQL Generator]
     XSDProfiles --> XSDGen[XSD Generator]
@@ -602,9 +595,9 @@ flowchart LR
 
 ## 4. Example Syntax for Each DSL
 
-### 4.1 TypeDomainDSL (TDD) – Example
+### 4.1 TypeDomain DSL (TD) – Example
 
-```tdd
+```td
 domain Email {
     base String;
     pattern "[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}";
@@ -619,9 +612,9 @@ domain Price {
 
 ---
 
-### 4.2 AbstractSchemaDSL (ASD) – Example
+### 4.2 AbstractSchema DSL (AS) – Example
 
-```asd
+```as
 entity Customer {
     field id       : UUID required;
     field name     : String100 required;
@@ -638,9 +631,9 @@ relation CustomerAddress {
 
 ---
 
-### 4.3 DatabaseSchemaDSL (DSD) – Example
+### 4.3 DatabaseSchema DSL (DS) – Example
 
-```dsd
+```ds
 table Customer as entity Customer {
     column id    uuid primary;
     column name  varchar(100) not null;
@@ -656,9 +649,9 @@ foreign_key fk_customer_address {
 
 ---
 
-### 4.4 InterchangeSchemaDSL (ISD) – Example
+### 4.4 InterchangeSchema DSL (IS) – Example
 
-```isd
+```is
 message CustomerMessage {
     element Customer {
         id        : Uuid;
@@ -671,10 +664,10 @@ message CustomerMessage {
 
 ---
 
-### 4.5 Behavior DSL Examples (EssentialBehaviorDSL / SchemaBehaviorDSL / BusinessBehaviorDSL)
+### 4.5 Behavior DSL Examples (EssentialBehavior DSL / SchemaBehavior DSL / BusinessBehavior DSL)
 
-EssentialBehaviorDSL (EBD)
-```ebd
+EssentialBehavior DSL (EB)
+```eb
 const REGEXP_FOR_EMAIL_BASIC = "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$" 
 const REGEXP_FOR_EMAIL_STRICT = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
 const REGEXP_FOR_EMAIL_RFC_FULL = "(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\."[ +
@@ -693,7 +686,7 @@ constraint Customer.email {
 }
 ```
 
-SchemaBehaviorDSL (SBD)
+SchemaBehavior DSL (SB)
 ```sbd
 schema_rule CustomerTable {
     require(Customer.id primary_key);
@@ -701,7 +694,7 @@ schema_rule CustomerTable {
 }
 ```
 
-BusinessBehaviorDSL (BBD)
+BusinessBehavior DSL (BB)
 ```bbd
 invariant Customer {
     rule "Email must be present when Address is used" {
@@ -713,9 +706,9 @@ invariant Customer {
 
 ---
 
-### 4.6 Profile DSL Examples (APD + Concrete Profiles)
+### 4.6 Profile DSL Examples (AP + Concrete Profiles)
 
-```apd
+```ap
 profile XsdIcProfile for CustomerMessage {
     namespace "http://example.org/customer/v1";
     ordering  lexicographical;
@@ -723,7 +716,7 @@ profile XsdIcProfile for CustomerMessage {
 }
 ```
 
-```apd
+```ap
 profile OracleDbProfile for CustomerTable {
     map String100 to VARCHAR2(100 CHAR);
     map UUID       to RAW(16);
@@ -739,19 +732,19 @@ profile OracleDbProfile for CustomerTable {
 The Modustro modeling pipeline proceeds in following major stages:
 
 1. **Specify general profile settings for profiles used on project** (PostgresDbProfile, JavaOrmDbProfile or XsdIcProfile common settings)
-2. **Define Entity groups** in ASD (Database schema entities, subgroups of them, Interchange Schema entities, subgroups of them, )
-3. **Define Entities and their relations** in ASD (Customer, Product…)
+2. **Define Entity groups** in AS (Database schema entities, subgroups of them, Interchange Schema entities, subgroups of them, )
+3. **Define Entities and their relations** in AS (Customer, Product…)
 4. **Group entities** into:
-    - DSD group/groups → for SQL generation
-    - ISD group/groups → for XSD/JSON/OpenAPI generation
-    - every ASD can be in one, second or both groups
+    - DS group/groups → for SQL generation
+    - IS group/groups → for XSD/JSON/OpenAPI generation
+    - every AS can be in one, second or both groups
 5. **Attach profiles to groups and or individual entities** (PostgresDbProfile, JavaOrmDbProfile to entities supporting DB, XsdProfile to entities supporting XSD…)
-6. **Define types** in TDD (Email, Price, UUID…)
-7. **Use types in ASD entity fields** (Customer.Email, Product.Price…)
+6. **Define types** in TD (Email, Price, UUID…)
+7. **Use types in AS entity fields** (Customer.Email, Product.Price…)
 8. **Complete entities** by specifying custom properties for entity profiles
 9. **Run generators** to produce concrete outputs
 
-The "SchemaDSL" layer is practically used only in background by the "ProfileDSL" layers, which then steers the vizualization to the user 
+The "Schema DSL" layer is practically used only in background by the "Profile/v1" layers, which then steers the vizualization to the user 
 and control of the structure definitions, provided in background by the schemaDSL capabilities.
 
 The global profile settings must be able to be also saved and loaded separately from the project, to allow the simple synchronization 
@@ -760,23 +753,23 @@ of the profiles across multiple projects
 ### 5.2 Diagram of Schema-Profile DSL Relations
 
 ```mermaid
-flowchart TD
-    TDD["TypeDomaonDSL\n(TDD)"] -.-> |ASD imports and re-exports TDD|ASD["AbstractSchemaDSL (ASD)"] 
-    ASD ==> |DSD extends ASD| DSD["DatabaseSchemaDSL\n(DSD)"]
-    ASD ==> |ISD extends ASD| ISD["InterchangeSchemaDSL\n(ISD)"]
-    DSD -.->|DPD imports and re-exports DSD|DPD["DatabaseProfileDSL\n(DPD)"] 
-    ISD -.->|IPD imports and re-exports ISD|IPD["InterchangeProfileDSL\n(IPD)"] 
-    APD["AbstractProfileDSL\n(APD)"] -->|DPD extends APD| DPD
-    TDD -.-> |APD imports and re-exports TDD| APD 
-    APD ==>|IPD extends APD| IPD
-    IPD ==>|XsdIcProfileDSL extends IPD| XsdIcPD["Example: XsdIcProfileDSL\n(is optional for any Db kind)"]
-    DPD ==>|PostgresDbProfileDSL extends DPD| PgDbPD["Example:\nPostgresDbProfileDSL\n(is optional for any Db kind)"]
-    ISD ==>|XsdIcSchemaDSL extends ISD| XsdIcSD["Example:\nXsdIcSchemaDSL\n(is optional for any Ic kind)"]
-    DSD ==>|PostgresDbSchemaDSL extends DSD| PgDbSD["Example:\nPostgresDbSchemaDSL\n(is optional for any Db kind)"]
-    XsdIcSD -.->|XsdIcProfileDSL imports\nand re-exports XsdIcSchemaDSL|XsdIcPD
-    PgDbSD -.->|PostgresDbProfileDSL imports\nand re-exports PostgresDbSchemaDSL|PgDbPD
-    XsdIcGenerator["XSD Generator\n(If general Interchange generators\nare not enough)"] -->|XsdIcProfileDSL imports\nand starts XsdIcGenerator|XsdIcPD
-    PgDbGenerator["Postgres Generator\n(If general Database generators\nare not enough)"] -->|PostgresDbProfileDSL imports\nand starts PgDbGenerator|PgDbPD
+flowchart AP
+    TD["TypeDomain DSL\n(TD)"] -.-> |AS imports and re-exports TD|AS["AbstractSchema DSL (AS)"] 
+    AS ==> |DS extends AS| DS["DatabaseSchema DSL\n(DS)"]
+    AS ==> |IS extends AS| IS["InterchangeSchema DSL\n(IS)"]
+    DS -.->|DPD imports and re-exports DS|DPD["DatabaseProfile DSL\n(DPD)"] 
+    IS -.->|IPD imports and re-exports IS|IPD["InterchangeProfile DSL\n(IPD)"] 
+    AP["AbstractProfile DSL\n(AP)"] -->|DPD extends AP| DPD
+    TD -.-> |AP imports and re-exports TD| AP 
+    AP ==>|IPD extends AP| IPD
+    IPD ==>|XsdIcProfile DSL extends IPD| XsdIcPD["Example: XsdIcProfile DSL\n(is optional for any Db kind)"]
+    DPD ==>|PostgresDbProfile DSL extends DPD| PgDbPD["Example:\nPostgresDbProfile DSL\n(is optional for any Db kind)"]
+    IS ==>|XsdIcSchema DSL extends IS| XsdIcSD["Example:\nXsdIcSchema DSL\n(is optional for any Ic kind)"]
+    DS ==>|PostgresDbSchema DSL extends DS| PgDbSD["Example:\nPostgresDbSchema DSL\n(is optional for any Db kind)"]
+    XsdIcSD -.->|XsdIcProfile DSL imports\nand re-exports XsdIcSchema DSL|XsdIcPD
+    PgDbSD -.->|PostgresDbProfile DSL imports\nand re-exports PostgresDbSchema DSL|PgDbPD
+    XsdIcGenerator["XSD Generator\n(If general Interchange generators\nare not enough)"] -->|XsdIcProfile DSL imports\nand starts XsdIcGenerator|XsdIcPD
+    PgDbGenerator["Postgres Generator\n(If general Database generators\nare not enough)"] -->|PostgresDbProfile DSL imports\nand starts PgDbGenerator|PgDbPD
 ```
 
 [[/CONFIRMED]]
@@ -788,10 +781,10 @@ Although the architecture is powerful, scalable, and highly flexible, several pr
 
 ---
 
-### 5.3.1 Hidden Intermediate SchemaDSL Layers (Debugging Complexity)
+### 5.3.1 Hidden Intermediate Schema DSL Layers (Debugging Complexity)
 
 **Problem**  
-Because users work only with abstract ASD entities and profiles, the intermediate SchemaDSL layers (DSD, ISD, or profile-specific schema DSLs) remain hidden.  
+Because users work only with abstract AS entities and profiles, the intermediate Schema DSL layers (DS, IS, or profile-specific schema DSLs) remain hidden.  
 This may complicate debugging when:
 
 - a SQL column name is unexpectedly different,
@@ -803,7 +796,7 @@ Users see the final outputs but not the intermediate “effective schema” tran
 
 **Mitigations**
 
-- Provide an optional **“Show Effective SchemaDSL”** view to inspect generated DSD/ISD structures.
+- Provide an optional **“Show Effective Schema DSL”** view to inspect generated DS/IS structures.
 - Add **Profile Preview Panels**, such as:
     - *Effective SQL Entity View*
     - *Effective XSD View*
@@ -877,7 +870,7 @@ Without a clear priority/override strategy, the “effective schema” may becom
 | **Unified abstract entity model** | One definition used across DB, XSD, JSON, ORM, API, etc. | Harder to debug without exposing intermediate schema layers. |
 | **Automation & defaults** | Fast modeling, minimal boilerplate. | Unexpected defaults may cause confusion. |
 | **Multiple profiles per entity** | Multi-platform output from one model; highly flexible. | Possible conflicts between profiles (naming, constraints, types). |
-| **Hidden SchemaDSL layers** | Clean UX; users stay in ASD + Profiles only. | Harder introspection; needs “Effective View” modes. |
+| **Hidden Schema DSL layers** | Clean UX; users stay in AS + Profiles only. | Harder introspection; needs “Effective View” modes. |
 | **Plugin architecture** | Easy extension with new profiles/generators. | Higher complexity on Modustro implementation side. |
 | **CO ↔ EO mapping possibilities** | Can generate mapping layers automatically. | May cause higher coupling if used unintentionally (DDD concerns). |
 
@@ -1119,20 +1112,20 @@ This approach elevates Modustro from a modeling tool to a full-scale, enterprise
 This DSL architecture maps directly to the roadmap:
 
 - **Wave 0.1**
-  - Core DSL layer definitions (TDD + ASD)
-  - Minimal behavior layer (EBD)
+  - Core DSL layer definitions (TD + AS)
+  - Minimal behavior layer (EB)
   - First generator prototype (plain SQL)
 
 - **Wave 0.2**
-  - DatabaseSchemaDSL + InterchangeSchemaDSL baseline
-  - DatabaseProfileDSL + InterchangeProfileDSL baseline
+  - DatabaseSchema DSL + InterchangeSchema DSL baseline
+  - DatabaseProfile DSL + InterchangeProfile DSL baseline
 
 - **Wave 0.3**
   - Simple specific profiles (Postgres, XSD base)
   - Profile groups loading from file and storing to file
 
 - **Wave 1**
-  - Extended schema behavior (SBD)
+  - Extended schema behavior (SB)
   - Multi-database support
   - Rich validation
   - XSD, JSON Schema generation
@@ -1143,7 +1136,7 @@ This DSL architecture maps directly to the roadmap:
   - GUI configuration of DSL elements
 
 - **Wave 3**
-  - BusinessBehaviorDSL (DDD concepts)
+  - BusinessBehavior DSL (DDD concepts)
   - AI-assisted modeling
   - Large-scale multi-module support
 
@@ -1154,13 +1147,13 @@ This DSL architecture maps directly to the roadmap:
 **DomainType**  
 Reusable named type such as Email, UUID, Price.
 
-**Entity (ASD - AbstractSchemaDSL)**  
+**Entity (AS - AbstractSchema DSL)**  
 A schema-level structural object.
 
-**Profile (APD)**  
+**Profile (AP)**  
 Output-specific configuration (e.g., XSD, Oracle).
 
-**Invariant (EBD/SBD)**  
+**Invariant (EB/SB)**  
 Rule that must always hold.
 
 **Generator**  

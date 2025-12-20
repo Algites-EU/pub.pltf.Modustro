@@ -21,11 +21,11 @@ Its long-term vision is to serve as the **structural backbone** of system design
 
 ## 1.1 Basic terms
 
-- **AbstractSchemaDSL Core (abstract metamodel)** (DD)  
+- **AbstractSchema DSL Core (abstract metamodel)** (DD)  
   The foundational DSL describing generic entities, attributes, constraints and relations shared by both downstream DSLs.
-- **DatabaseSchemaDSL Metamodel**  (DDD)
+- **DatabaseSchema DSL Metamodel**  (DDD)
   Implementation of the persistence DSL used for database modelling (tables, columns, PK/FK/UK, constraints, SQL data types).
-- **InterchangeSchemaDSL Metamodel**  (IDD)
+- **InterchangeSchema DSL Metamodel**  (IDD)
   Implementation of the interchange DSL used for modelling transferable/document based/non-database data structures (XSD, JSON Schema, DTO, API payloads, Avro/Proto, messaging formats).
 
 ---
@@ -76,7 +76,7 @@ Each wave builds on the previous, with increasing modeling power, extensibility,
 - Implement basic DSL for Database and Interchange Entity modeling
 - Create first generators (PostgreSQL, XSD) 
 - Domain Support
-  - Domain usage in AbstractSchemaDSL fields
+  - Domain usage in AbstractSchema DSL fields
   - SCM integration: domain-level compatibility checking
   - Domain summary preview
   - Domain-based first mapping in SQL & XSD
@@ -88,10 +88,10 @@ Each wave builds on the previous, with increasing modeling power, extensibility,
   - Domain type abstraction
   - Mapping rules defined per profile
   - Basic constraints (length, precision, scale, pattern, nullable)
-  - Integrated with AbstractSchemaDSL & InterchangeDSL
+  - Integrated with AbstractSchema DSL & InterchangeDSL
   - Editor for domain creation
   - Reusable domain definitions across projects
-- **Modustro AbstractSchemaDSL v0.1**  
+- **Modustro AbstractSchema DSL v0.1**  
   The foundational DSL describing generic entities, fields, (?enums?,) constraints and relations shared by both downstream DSLs.
 - **Modustro Semantic Compatibility Matrix Support v0.1**  
   The foundational DSL describing semantic compatibility and allowing the replacement of the unsupported features on various levels of DSL inheritance.
@@ -102,31 +102,31 @@ Each wave builds on the previous, with increasing modeling power, extensibility,
   - Ensures deterministic, safe generator output
   - Drives UI warnings and profile compatibility checks
   - Foundation for adding new profiles without DSL changes
-- **AbstractSchemaDSL Validator Core v0.1**  
+- **AbstractSchema DSL Validator Core v0.1**  
   Detection of duplicate names, invalid types
-- **Modustro DatabaseSchemaDSL v0.1**  
+- **Modustro DatabaseSchema DSL v0.1**  
   Implementation of the persistence DSL used for database modelling (tables, columns, PK/FK/UK, constraints, SQL data types, indexes, sequences).
-- **DatabaseSchemaDSL Validator Core v0.1**  
+- **DatabaseSchema DSL Validator Core v0.1**  
   Detection of missing PKs, invalid types
-- **Modustro InterchangeSchemaDSL v0.1**  
+- **Modustro InterchangeSchema DSL v0.1**  
   Implementation of the interchange DSL used for modelling transferable/external data structures (XSD, JSON Schema, DTO, API payloads, Avro/Proto, messaging formats
   using structural elements like root element, namespaces, serialization rules, wrapped types, field -> element with attributes etc.)
-- **InterchangeSchemaDSL Validator Core v0.1**  
+- **InterchangeSchema DSL Validator Core v0.1**  
   Detection of:
     - Invalid root type
     - Non-serializable constructs
     - Duplicate element names
     - Unsupported combinations (attribute + complex type)
     - Unbound namespaces
-- **Modustro PgDatabaseSchemaDSL v0.1**  
+- **Modustro PgDatabaseSchema DSL v0.1**  
   PostgreSQL specific data
-- **Modustro XsdInterchangeSchemaDSL v0.1**  
+- **Modustro XsdInterchangeSchema DSL v0.1**  
   XSD specific data
-- **Java ORM Generator for DatabaseSchemaDSL v0.1**  
+- **Java ORM Generator for DatabaseSchema DSL v0.1**  
   Entity objects including JPA/Hibernate Annotations
-- **SQL Generator for PgDatabaseSchemaDSL v0.1**  
+- **SQL Generator for PgDatabaseSchema DSL v0.1**  
   PostgreSQL CREATE TABLE + FKs  
-- **XSD Generator for XsdInterchangeSchemaDSL v0.1**  
+- **XSD Generator for XsdInterchangeSchema DSL v0.1**  
   XSD Files - types with elements and attributes, namespaces, etc.
 - **Modustro Studio v0.1**  
   First branded binaries  
@@ -180,7 +180,7 @@ Each wave builds on the previous, with increasing modeling power, extensibility,
 - Domain-level editing & documentation
 - Domain libraries (import/export from files)
 
-### 5.2.2 DatabaseSchemaDSL 1.0 Features  
+### 5.2.2 DatabaseSchema DSL 1.0 Features  
 - Inheritance  
 - Type constraints  
 - Composite keys  
@@ -188,21 +188,21 @@ Each wave builds on the previous, with increasing modeling power, extensibility,
 - Soft deletes  
 - Computed fields  
 
-### 5.2.3 DatabaseSchemaDSL Validator 1.0  
+### 5.2.3 DatabaseSchema DSL Validator 1.0  
 - Relationship integrity checks  
 - Circular dependency detection  
 - Type mismatch detection  
 - Normalization rules  
 - Migration diff preview (read-only at this stage)
 
-### 5.2.4 DatabaseSchemaDSL Generators 1.0  
+### 5.2.4 DatabaseSchema DSL Generators 1.0  
 - PostgreSQL  
 - MySQL  
 - SQLite  
 - JSON Schema (MVP)  
 - TypeScript interfaces (MVP)
 
-### 5.2.5 InterchangeSchemaDSL 1.0 Features
+### 5.2.5 InterchangeSchema DSL 1.0 Features
 - Core IDD Domain Model type system (primitive, list, struct)
 - Namespaces
 - Documentation fields
@@ -211,7 +211,7 @@ Each wave builds on the previous, with increasing modeling power, extensibility,
 - Field metadata
 - No inheritance/polymorphism
 
-### 5.2.6 InterchangeSchemaDSL Validator 1.0
+### 5.2.6 InterchangeSchema DSL Validator 1.0
 - Unique type names
 - Type existence checks
 - Cardinality validation
@@ -219,7 +219,7 @@ Each wave builds on the previous, with increasing modeling power, extensibility,
 - Constraint validation
 - Cycle detection
 
-### 5.2.7 InterchangeSchemaDSL Generators 1.0
+### 5.2.7 InterchangeSchema DSL Generators 1.0
 - XSD preview generator
 - JSON Schema preview generator
 - Model summary generator
@@ -343,7 +343,7 @@ Each wave builds on the previous, with increasing modeling power, extensibility,
 - Expand into multi-domain modeling  
 - Introduce runtime integration APIs  
 - Prepare for OmniNeto data synchronization  
-- Deliver full DSD/ISD modeling suite  
+- Deliver full DS/IS modeling suite  
 
 ---
 
@@ -372,7 +372,7 @@ Each wave builds on the previous, with increasing modeling power, extensibility,
 
 ### 7.3.1 Conversational Modeling  
 - “Design an order management domain with full lifecycle rules.”  
-- “Refactor this model to DSD-compliant aggregates.”  
+- “Refactor this model to DS-compliant aggregates.”  
 - “Generate a modular architecture for this business description.”  
 
 ### 7.3.2 LLM Grounding in Modustro Models  
