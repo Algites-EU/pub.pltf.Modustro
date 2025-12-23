@@ -5,8 +5,12 @@
 Modustro is founded on the belief that software systems should be shaped by the domains they serve,
 not constrained by the tools that implement them.
 Instead of adapting problems to generic frameworks, Modustro empowers architects and developers
-to use or even define or extend precise domain languages based on a universal platform. To customize 
+to use, extend or even define precise domain languages based on a universal platform. To customize 
 and build their own modeling tools and generator systems that reflect their true intent.
+
+Rooted in the European tradition of rational thought, craftsmanship, and open exchange of ideas,
+Modustro embraces the values of interoperability, transparency, and long-term sustainability
+as foundations for building complex digital systems.
 
 At the entrance to the Modustro ecosystem stands **Modustro Prometheus** — the canonical reference
 implementation of a product based on the platform.
