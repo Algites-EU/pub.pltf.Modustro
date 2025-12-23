@@ -11,16 +11,17 @@ and all architectural modules that define Modustro as a model‑driven engineeri
 ## 1. Purpose
 
 This repository delivers:
-- The **Modustro DSL** (JetBrains MPS)
-- Modeling languages (ER, Domain, API)
+- The **Modustro platform artifacts** (Languages and Solutions based on JetBrains MPS)
+- Modeling languages (Database Schema, Interchange Schema, ...)
 - Structural editors & diagram projections
-- The Modustro **runtime engine**
+- The Modustro **runtime engine API**
 - Model analyzers & validators
-- All built‑in code generators (SQL, API, application scaffolding)
-- Internal shared libraries for platform needs
+- All built‑in common code generators (SQL, API, application scaffolding)
+- Reference implementations of the platform like Modustro Prometheus
+- Custom product public APIs of Products, based on Modustro Platform
 
-The platform is **technology‑centric**, not user‑centric.  
-Products—such as Modustro Studio—consume this platform.
+The platform is **technology‑centric**, not user‑centric. 
+Products—such as Algites Modustro Studio consume this platform.
 
 ---
 
@@ -28,27 +29,33 @@ Products—such as Modustro Studio—consume this platform.
 
 ```
 platform.Modustro/
- ├── languages/             # MPS language definitions (DSL)
- │    ├── base/
- │    ├── er/
- │    ├── domain/
- │    ├── api/
- │    └── diagrams/
- │
- ├── runtime/               # Runtime components for model execution
- │    ├── loader/
- │    ├── validator/
- │    └── engine/
- │
- ├── generators/            # Built-in code generators
- │    ├── sql/
- │    ├── api/
- │    └── app/
- │
- ├── plugins/               # Optional MPS plugins
- ├── docs/
- ├── examples/
- └── build/
+  ├── platform/             # Platform specific files (DSL)
+  │       ├── languages/             # MPS language definitions (DSL)
+  │       │    ├── base/
+  │       │    ├── er/
+  │       │    ├── domain/
+  │       │    ├── api/
+  │       │    └── diagrams/
+  │       │
+  │       ├── runtime/               # Runtime components for model execution
+  │       │    ├── loader/
+  │       │    ├── validator/
+  │       │    └── engine/
+  │       │
+  │       ├── generators/            # Built-in code generators
+  │       │    ├── sql/
+  │       │    ├── api/
+  │       │    └── app/
+  │       │
+  │       ├── plugins/               # Optional MPS plugins
+  │       ├── docs/
+  │       ├── examples/
+  │       └── build/
+  │
+  └── product/             # Public product resources, available to developers for development for specific vendor products
+          └── {vendor}             # specific resources of the given vendor, like Algites (should start with capital letter)
+                  └── {product family name}   # specific code of the product family, like Modustro (should start with capital letter)
+                            └── {product name}   # specific code of the product, like Studio or Prometheus (should start with capital letter)
 ```
 
 ---
@@ -71,8 +78,8 @@ The platform uses **JetBrains MPS**.
 
 ### Naming
 - All modules use prefix `modustro`
-- Language namespaces: `com.modustro.platform.*`
-- Generators: `modustro.generator.*`
+- Language namespaces - Example: `eu.modustro.plat.*`
+- Generators - Example: `modustro.gen.*`
 
 ### Versioning
 - Platform follows semantic versioning: **MAJOR.MINOR.PATCH**
@@ -82,10 +89,10 @@ The platform uses **JetBrains MPS**.
 
 ## 5. Usage
 
-This repo is **not** a product.  
+This repo is **not** a product except the reference implementation.  
 It provides the engine and languages used by applications such as:
 
-- `product.ModustroStudio`
+- `product.Modustro Studio`
 - future cloud services
 - CLI tools
 - external integrations

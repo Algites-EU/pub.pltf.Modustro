@@ -5,13 +5,13 @@
 The Modustro Platform Specification defines the stable, public modeling surface of the Modustro ecosystem.  
 It describes the **CoreDSL** and **Design DSLs** (Type, Schema, Profile, etc.), their relationships and namespaces, and the rules that every Modustro-compatible product must follow when creating, transforming, or analyzing models.
 
-This document **does not** prescribe any particular runtime implementation, persistence format, UI, or IDE integration. Those aspects belong to product‑specific documentation and the Product Internal Specification.
+This document **does not** prescribe any particular runtime implementation/solution, persistence format, UI, or IDE integration. Those aspects belong to product‑specific documentation and the Product Internal Specification of the various products, which may be based on the Modustro Platform Specification.
 
 The goals of this document are:
 
 - To provide a precise and stable description of the domain modeling languages.
 - To enable independent tools and products to operate on Modustro models.
-- To separate domain concepts (design) from implementation details (runtime, storage).
+- To separate domain concepts (design) from implementation details (runtime implementation/solution, storage).
 
 Modustro introduces a comprehensive ecosystem of interconnected domain-specific languages (DSLs) designed to model data, schemas, behavior, constraints, and generator profiles in a unified, extensible way.  
 Rather than creating a monolithic language, Modustro decomposes responsibilities into layered DSLs—each dedicated to a specific abstraction level.  
@@ -78,16 +78,17 @@ Modustro models are built on a layered approach:
 - **CoreDSL (core.\*)**: generic abstractions such as ObjectDef, ObjectRef, common identity.
 - **Design DSLs (mdstr.plat.\*)**: concrete domain languages for types, schemas, and profiles.
 
-Product‑specific runtime and storage DSLs are **not** part of this document.
+Product‑specific runtime implementation/solution and storage DSLs are **not** part of this document.
 
 ### 1.1 Four DSL Conceptual Views
 
 Although this document only standardizes **Core DSL**, **Design DSL** and **Behavior DSLs**, it is useful to keep the broader picture:
 
-1. **Core DSL (core.\*)** – abstract identities, object definitions and references; shared semantics.
+1. **Core DSL (mdstr.plat.core.*)** – abstract identities, object definitions and references; shared semantics.
 2. **Design DSLs (mdstr.plat.*)** – domain modeling: types, schema entities, DB entities, IC entities, profiles.
+2. **RuntimeApi DSL (mdstr.plat.ra)** – API for the communication of the design DSLs with the Runtime Solution.
 3. **Behavior DSLs (mdstr.plat.eb, mdstr.plat.sb, mdstr.plat.bb, mdstr.plat.mb)** - DSLs defining general behavior of the given level of the objects
-4. **Runtime/PDS (mdstr.prod.rt, mdstr.prod.pds)** – implementation‑specific layers, covered by the Product Internal Specification for products using the Modustro platform.
+4. **Runtime Solution / PDS (mdstr.prod.rs, mdstr.prod.pds)** – implementation‑specific layers, covered by the Product Internal Specification for products using the Modustro platform.
 
 The platform defines the first two layers; the third is free for product implementations as long as they respect the semantic contracts of Core + Design.
 
@@ -102,7 +103,7 @@ Modustro products (like modeling IDEs, code generators, CI integrations) must:
 Products are free to choose:
 
 - Their own persistence model, as long as it can be mapped back to valid Core+Design models supporting all required properties.
-- Their own runtime metadata model, including history, ordering, audit, etc.
+- Their own runtime implementation/solution metadata model, including history, ordering, audit, etc.
 
 ### 1.3 Goals: Stability, Versioning, Interoperability
 
@@ -179,6 +180,7 @@ to not interfere with existing namespaces.
 Examples of platform domains:
 
 -   `mdstr.plat.core` (Core DSL with core concepts)
+-   `mdstr.plat.ra` (Runtime API)
 -   `mdstr.plat.td` (Type Definition)
 -   `mdstr.plat.as` (Abstract Schema)
 -   `mdstr.plat.ds` (Database Schema)
@@ -187,7 +189,7 @@ Examples of platform domains:
 
 Examples of product domains:
 
--   `mdstr.prod.rt` (Runtime)
+-   `mdstr.prod.rs` (Runtime)
 -   `mdstr.prod.pds` (Persistence Data Storage)
 -   `mdstr.prod.audit` (Auditing)
 -   `mdstr.prod.ctrl` (Control / Management)
@@ -213,7 +215,7 @@ Where:
     https://modustro.eu/xmldefs/platform/AbstractSchema/v1
     https://modustro.eu/xmldefs/platform/DatabaseSchema/v1
     https://modustro.eu/xmldefs/platform/WorkflowUI/v1
-    https://modustro.eu/xmldefs/product/Runtime/v1
+    https://modustro.eu/xmldefs/product/RuntimeSolution/v1
     https://modustro.eu/xmldefs/product/Auditing/v1
 
 ##### 1.5.4 Default namespace
@@ -267,7 +269,7 @@ Should rarely be used.
 - Attributes from `core:` and `as:` are used for:
     - identity,
     - references within the DSL inheritance structure,
-    - product specific internal structures used for runtime, auditing, project persistence, etc.
+    - product specific internal structures used for runtime implementation/solution, auditing, project persistence, etc.
 
 - Logical DSL properties must be elements in the appropriate DSL namespace (e.g. `TypeName` in AP, `FieldName` in AS).
 
@@ -277,7 +279,8 @@ Prefixes are aliases bound to namespace URIs. The default form omits the
 version:
 
     xmlns:mdstr.plat.as="https://modustro.eu/xmldefs/platform/AbstractSchema/v1"
-    xmlns:mdstr.prod.rt="https://modustro.eu/xmldefs/product/Runtime/v1"
+    xmlns:mdstr.plat.ra="https://modustro.eu/xmldefs/product/RuntimeApi/v1"
+    xmlns:mdstr.prod.rs="https://modustro.eu/xmldefs/product/RuntimeSolution/v1"
 
 This is the **standard form** and SHOULD be used when only one version
 of a domain appears in a document.
@@ -351,6 +354,7 @@ Official URIs:
 ```
 xmlns:mdstr="https://modustro.eu/xmldefs/platform"
 xmlns:mdstr.plat.core="https://modustro.eu/xmldefs/platform/Core/v1"
+xmlns:mdstr.plat.ra="https://modustro.eu/xmldefs/platform/RuntimeApi/v1"
 xmlns:mdstr.plat.td="https://modustro.eu/xmldefs/platform/TypeDomain/v1"
 xmlns:mdstr.plat.as="https://modustro.eu/xmldefs/platform/AbstractSchema/v1"
 xmlns:mdstr.plat.ds="https://modustro.eu/xmldefs/platform/DatabaseSchema/v1"
@@ -363,6 +367,7 @@ xmlns:mdstr.plat.sb="https://modustro.eu/xmldefs/platform/SchemaBehavior/v1"
 xmlns:mdstr.plat.bb="https://modustro.eu/xmldefs/platform/BusinessBehavior/v1"
 xmlns:mdstr.plat.mb="https://modustro.eu/xmldefs/platform/MetaBehavior/v1"
 xmlns:mdstr.prod.prj="https://modustro.eu/xmldefs/product/Project/v1"
+xmlns:mdstr.prod.rs="https://modustro.eu/xmldefs/product/RuntimeSolution/v1"
 xmlns:mdstr.prod.prof="https://modustro.eu/xmldefs/product/Profile/v1"
 xmlns:mdstr.prod.gen="https://modustro.eu/xmldefs/product/Generator/v1"
 xmlns:mdstr.prod.audit="https://modustro.eu/xmldefs/product/Auditing/v1"
@@ -395,11 +400,11 @@ Map to:
 
 From:
 
-    https://modustro.eu/xmldefs/product/Runtime/v1
+    https://modustro.eu/xmldefs/platform/RuntimeApi/v1
 
 Map to:
 
-    eu.modustro.prod.rt.v1
+    eu.modustro.prod.ra.v1
 
 This rule ensures:
 
@@ -433,7 +438,7 @@ This ensures a round-trip between XML and JSON without losing namespace semantic
 
 #### 1.5.13 Tooling Responsibilities
 
-Modustro tooling (serializers, generators, runtime) MUST:
+Modustro tooling (serializers, generators, runtime implementation/solution) MUST:
 
 -   Treat the namespace URI as the authoritative identity.
 
@@ -452,26 +457,27 @@ Modustro tooling (serializers, generators, runtime) MUST:
 
 Modustro uses a modular, layered namespace system:
 
-| Namespace                             | Prefix full                       | Prefix short | Purpose                                                                                             |
-|---------------------------------------|-----------------------------------|--------------|-----------------------------------------------------------------------------------------------------|
-| **Platform namespace**                | `mdstr`                           | `mdstr`      | Core platform namespace                                                                             |
-| **Model namespace**                   | `mdstr.plat.core`                  | `mdl`        | Model identity, ordering, metadata used inside Schema DSL & AP                                      |
-| **Project namespace**                 | `mdstr.prod.prj`                  | `prj`        | Project configuration, settings, versioning, metadata                                               |
-| **Type Domain DSL namespace**         | `mdstr.plat.td`                   | `td`        | Domain type definitions, properties, domain metadata                                                |
-| **Abstract Schema DSL namespace**     | `mdstr.plat.as`                   | `as`        | Abstract schema structures, like Entities, Fields, etc.                                             |
-| **Database Schema DSL namespace**     | `mdstr.plat.ds`                   | `ds`        | Database schema structures, like tables, Columns, etc.                                              |
-| **Interchange Schema DSL namespace**  | `mdstr.plat.is`                   | `is`        | Interchange schema structures, like Complex types, elements, etc.                                   |
-| **Abstract Profile DSL namespace**    | `mdstr.plat.ap`                   | `ap`        | Abstract profile namespace definitions, like Profile structures, general interfaces for plugins, etc. |
-| **Database Profile DSL namespace**    | `mdstr.plat.dp`                   | `dp`        | Database profile namespace definitions                                                              |
-| **Interchange Profile DSL namespace** | `mdstr.plat.ip`                   | `ip`        | Interchange profile namespace definitions                                                           |
-| **Essential Behavior DSL namespace**  | `mdstr.plat.eb`                   | `eb`        | Definition of essential behaviors for types                                                         |
-| **Schema Behavior DSL namespace**     | `mdstr.plat.sb`                   | `sb`        | Definition of schema behaviors for single entity field behaviors                                    |
-| **Business Behavior DSL namespace**   | `mdstr.plat.bb`                   | `bb`        | Definition of business behaviors impacting multiple entities                                        |
-| **Meta Behavior DSL namespace**       | `mdstr.plat.mb`                   | `mb`        | Definition of behaviors impacting the DSLs as they are                                              |
-| **Profile namespace**                 | `mdstr.prod.prof`                 | `prof`       | Profile definitions, profile rules, overrides                                                       |
-| **Generator namespace**               | `mdstr.prod.gen`                  | `gen`        | Generator-related metadata, physical mappings                                                       |
-| **Audit namespace**                   | `mdstr.prod.audit`                | `audit`      | Auditing-related metadata                                                          |
-| **(Reserved for future)**             | `mdstr.prod.ui`, `mdstr.prod.doc` | `doc`, `ui`  | UI metadata, documentation metadata apod                                                            |
+| Namespace                             | Prefix full                       | Prefix short | Purpose                                                                                               |
+|---------------------------------------|-----------------------------------|--------------|-------------------------------------------------------------------------------------------------------|
+| **Platform namespace**                | `mdstr`                           | `mdstr`      | Core platform namespace                                                                               |
+| **Model namespace**                   | `mdstr.plat.core`                 | `mdl`        | Model identity, ordering, metadata used inside Schema DSL & AP                                        |
+| **RuntimeApi namespace**              | `mdstr.plat.ra`                   | `ra`         | Runtime API DSL defines communication of the Design DSLs with the solution/implementation DSL         |
+| **Project namespace**                 | `mdstr.prod.prj`                  | `prj`        | Project configuration, settings, versioning, metadata                                                 |
+| **Type Domain DSL namespace**         | `mdstr.plat.td`                   | `td`         | Domain type definitions, properties, domain metadata                                                  |
+| **Abstract Schema DSL namespace**     | `mdstr.plat.as`                   | `as`         | Abstract schema structures, like Entities, Fields, etc.                                               |
+| **Database Schema DSL namespace**     | `mdstr.plat.ds`                   | `ds`         | Database schema structures, like tables, Columns, etc.                                                |
+| **Interchange Schema DSL namespace**  | `mdstr.plat.is`                   | `is`         | Interchange schema structures, like Complex types, elements, etc.                                     |
+| **Abstract Profile DSL namespace**    | `mdstr.plat.ap`                   | `ap`         | Abstract profile namespace definitions, like Profile structures, general interfaces for plugins, etc. |
+| **Database Profile DSL namespace**    | `mdstr.plat.dp`                   | `dp`         | Database profile namespace definitions                                                                |
+| **Interchange Profile DSL namespace** | `mdstr.plat.ip`                   | `ip`         | Interchange profile namespace definitions                                                             |
+| **Essential Behavior DSL namespace**  | `mdstr.plat.eb`                   | `eb`         | Definition of essential behaviors for types                                                           |
+| **Schema Behavior DSL namespace**     | `mdstr.plat.sb`                   | `sb`         | Definition of schema behaviors for single entity field behaviors                                      |
+| **Business Behavior DSL namespace**   | `mdstr.plat.bb`                   | `bb`         | Definition of business behaviors impacting multiple entities                                          |
+| **Meta Behavior DSL namespace**       | `mdstr.plat.mb`                   | `mb`         | Definition of behaviors impacting the DSLs as they are                                                |
+| **Profile namespace**                 | `mdstr.prod.prof`                 | `prof`       | Profile definitions, profile rules, overrides                                                         |
+| **Generator namespace**               | `mdstr.prod.gen`                  | `gen`        | Generator-related metadata, physical mappings                                                         |
+| **Audit namespace**                   | `mdstr.prod.audit`                | `audit`      | Auditing-related metadata                                                                             |
+| **(Reserved for future)**             | `mdstr.prod.ui`, `mdstr.prod.doc` | `doc`, `ui`  | UI metadata, documentation metadata apod                                                              |
 
 This allows clean separation and massive long-term flexibility.
 
@@ -516,7 +522,7 @@ flowchart LR
     subgraph Product["Modustro Product (Domains / DSLs)"]
     direction TB
         AUDIT["AUD — Auditing DSL\n(mdstr.prod.audit)"]
-        RT["RT — Runtime DSL\n(mdstr.prod.rt)"]
+        RS["RS — Runtime Solution DSL\n(mdstr.prod.rs)"]
         PRJ["PRJ — Project DSL\n(mdstr.prod.prj)"]
         PPROF["PPROF — Product Profile DSL\n(mdstr.prod.prof)"]
         GEN["GEN — Generator DSL\n(mdstr.prod.gen)"]
@@ -530,6 +536,8 @@ flowchart LR
         direction TB
         
         CORE["C — Core DSL\n(mdstr.plat.core)"]
+
+        RA["RA — Runtime API DSL\n(mdstr.prod.ra)"]
         
         AP["AP — Type Domain DSL\n(mdstr.plat.td)"]
         
@@ -608,20 +616,35 @@ flowchart LR
     WUI -.-> |WUI uses \ninternally BB| BB
     WUI -.-> |WUI uses \ninternally PPROF| PPROF
     
-    RT   -.-> |RT uses \ninternally C| CORE
-    RT   -.-> |RT uses \ninternally AP| AP
-    RT   -.-> |RT uses \ninternally AS| AS
-    RT   -.-> |RT uses \ninternally DS| DS
-    RT   -.-> |RT uses \ninternally IS| IS
-    RT   -.-> |RT uses \ninternally AP| AP
-    RT   -.-> |RT uses \ninternally DP| DP
-    RT   -.-> |RT uses \ninternally IP| IP
-    RT   -.-> |RT uses \ninternally EB| EB
-    RT   -.-> |RT uses \ninternally SB| SB
-    RT   -.-> |RT uses \ninternally BB| BB
-    RT   -.-> |RT uses \ninternally MB| MB
-    
-    AUDIT -.-> |AUD uses \ninternally C| CORE
+    RS   -.-> |RS uses \ninternally C| CORE
+    RS   -.-> |RS uses \ninternally AP| AP
+    RS   -.-> |RS uses \ninternally AS| AS
+    RS   -.-> |RS uses \ninternally DS| DS
+    RS   -.-> |RS uses \ninternally IS| IS
+    RS   -.-> |RS uses \ninternally AP| AP
+    RS   -.-> |RS uses \ninternally DP| DP
+    RS   -.-> |RS uses \ninternally IP| IP
+    RS   -.-> |RS uses \ninternally EB| EB
+    RS   -.-> |RS uses \ninternally SB| SB
+    RS   -.-> |RS uses \ninternally BB| BB
+    RS   -.-> |RS uses \ninternally MB| MB
+
+    RA   -.-> |RA  uses \ninternally RS| RS
+
+    CORE   -.-> |C  uses \ninternally RA| RA
+    AP     -.-> |AP uses \ninternally RA| RA
+    AS     -.-> |AS uses \ninternally RA| RA
+    DS     -.-> |DS uses \ninternally RA| RA
+    IS     -.-> |IS uses \ninternally RA| RA
+    AP     -.-> |AP uses \ninternally RA| RA
+    DP     -.-> |DP uses \ninternally RA| RA
+    IP     -.-> |IP uses \ninternally RA| RA
+    EB     -.-> |EB uses \ninternally RA| RA
+    SB     -.-> |SB uses \ninternally RA| RA
+    BB     -.-> |BB uses \ninternally RA| RA
+    MB     -.-> |MB uses \ninternally RA| RA
+      
+AUDIT -.-> |AUD uses \ninternally C| CORE
     AUDIT -.-> |AUD uses \ninternally RT| RT
     
     CTRL  -.-> |CTRL uses \ninternally RT| RT
@@ -782,6 +805,251 @@ External tools are expected to:
 - and avoid depending on any implicit or undocumented namespace behavior.
 
 ---
+# 1.6 Modustro Ecosystem Architecture
+
+This chapter describes the target architecture of the Modustro ecosystem
+from the platform perspective, the separation of responsibilities
+between the design-time layer and product implementations, and the way
+JetBrains MPS serves as the host environment for creating DSLs, editors,
+and generators.
+
+The goals of the architecture are: - to provide a **stable platform**
+with normative DSL languages, - to enable **independent development and
+testing** of the platform without product complexity, - to allow
+**multiple runtime implementations** of the platform, - to keep MPS as
+the **primary design-time tool** for users and extension authors.
+
+## 1.6.1 Overview
+
+The Modustro ecosystem is divided into two main MPS projects:
+
+-   **platform.Modustro** -- the platform and SDK,
+-   **product.Modustro** -- product implementations of the platform.
+
+``` mermaid
+flowchart TB
+    subgraph P["platform.Modustro"]
+        PDSL["Platform DSL"]
+        RAPI["RuntimeApi DSL"]
+        RREF["Runtime Reference Implementation"]
+        PSTUDIO["Platform Studio (MPS Solution)"]
+    end
+
+    subgraph PR["product.Modustro"]
+        RIMPL["Product Runtime Engine"]
+        MSTUDIO["Modustro Studio"]
+        TOOLS["Additional Tools (CLI, Integrations)"]
+    end
+
+    PDSL --> RAPI
+    RAPI --> RREF
+    PDSL --> PSTUDIO
+    RREF --> PSTUDIO
+
+    PDSL --> RIMPL
+    RAPI --> RIMPL
+    RIMPL --> MSTUDIO
+    RIMPL --> TOOLS
+```
+
+## 1.6.2 platform.Modustro -- Platform Project
+
+The **platform.Modustro** project represents the foundation of the
+entire Modustro architecture.
+
+### 1.6.2.1 Platform DSL Languages
+
+The platform contains all normative design-time DSL languages, for
+example:
+
+-   Core DSL (ObjectDef, GUID, basic types),
+-   Type Domain DSL (TDD),
+-   Abstract Schema DSL (ASD),
+-   Database Schema DSL (DSD),
+-   Interchange Schema DSL (ISD),
+-   Profile DSL (APD, DPD, IPD),
+-   other supporting languages.
+
+These languages form: - the **meta-model of Modustro**, - a unified
+semantics of structures, - the basis for validations and generators.
+
+Platform DSL languages are the **source of truth** for model meaning.
+
+### 1.6.2.2 RuntimeApi DSL
+
+The platform includes a dedicated design-time language:
+
+-   **RuntimeApi DSL**
+
+This language defines: - generic **commands** (e.g., `SetValue`,
+`MoveItem`, `AddItem`, `DeleteItem`), - basic data types (`Guid`,
+`ObjVal`, `Command`), - the contract of the runtime engine interface.
+
+The RuntimeApi DSL serves as: - a **narrow communication interface**
+between the DSL world and the runtime world, - a unified API used by all
+other DSLs in editors and behavior.
+
+Platform DSLs do not call the runtime directly; instead, they only
+create and submit commands defined in the RuntimeApi DSL.
+
+### 1.6.2.3 Runtime Reference Implementation
+
+The platform contains one or more **runtime reference implementations**,
+whose purpose is to:
+
+-   provide a **simple local realization** of the runtime API,
+-   enable development and testing of platform DSLs, editors, and
+    generators,
+-   avoid any product-specific complexity.
+
+Typical characteristics of a reference implementation include: -
+in-memory state, - mechanical execution of commands, - direct projection
+of the resulting state back into the DSL AST, - no advanced distributed
+or persistent mechanisms.
+
+The reference implementation serves exclusively as: - a **development
+and testing tool for the platform**, - the default runtime for extension
+and generator authors.
+
+### 1.6.2.4 Modustro Prometheus Solution
+
+Modustro Prometheus, named after the mythological bringer of fire to humankind, serves as the canonical reference 
+implementation of the Modustro platform, empowering developers with the foundational runtime needed to build their 
+own Modustro-based products.
+
+Within the platform Modustro Prometheus is an MPS solution that:
+
+-   provides an IDE environment over the Platform DSLs,
+-   acts as the Runtime Reference Implementation,
+-   enables:
+    -   authoring and debugging DSLs,
+    -   development of editors,
+    -   creation and testing of generators,
+    -   development of customizations.
+    -   demonstration of the way, how the plugins shall be developed.
+
+Prometheus acts as: - an **SDK and laboratory environment** for the
+Modustro platform, - a base for demonstration how to build installable extension packages, etc.
+
+## 1.6.3 Algites Modustro products
+
+The **product.Modustro** from Algites represents concrete product
+realizations of the platform.
+
+### 1.6.3.1 Product Runtime Solutions
+
+The Algites product project contains the full-scale runtime engine implementation(s)
+that:
+
+-   implement the contract defined by the RuntimeApi DSL,
+-   realize all product-level functionalities,
+-   provide the runtime behavior of the platform.
+-   extend the basic functionalities about additional user functionalities
+
+These implementations are: - fully replaceable from the platform
+perspective, - injected into the RuntimeApi at product startup.
+
+The platform itself contains no product-specific logic.
+
+### 1.6.3.2 Algites Modustro Studio
+
+**Algites Modustro Studio** is one of the product implementations of the
+platform:
+
+-   an MPS solution built on top of the Platform DSLs,
+-   using a product runtime engine instead of the reference
+    implementation,
+-   providing the end-user IDE for working with Modustro models.
+
+From the platform perspective, Modustro Studio is: - just one possible
+runtime realization, - without any impact on the definition of platform
+DSLs.
+
+### 1.6.3.3 Additional Product Tools
+
+The product project may further contain:
+
+-   command-line tools (CLI),
+-   integration utilities,
+-   automation tools,
+-   other application components,
+
+which: - use the same runtime engine, - operate on the same platform
+meta-model.
+
+## 1.6.4 Command-Based Interaction Model
+
+The interaction between the DSL world and the runtime world is based on
+a command model.
+
+``` mermaid
+sequenceDiagram
+    participant U as User
+    participant E as MPS Editor
+    participant R as RuntimeService
+    participant ENG as RuntimeEngine
+    participant P as Projection
+
+    U->>E: edit / action
+    E->>R: create Command
+    R->>ENG: apply(Command)
+    ENG->>ENG: process & update state
+    ENG->>P: compute projection
+    P->>E: apply changes to AST
+```
+
+Principles: - the DSL expresses only the **intent of change**, - the
+runtime engine decides how the change is realized, - the resulting state
+is **projected** back into the DSL AST, - the DSL is never modified
+directly without runtime participation.
+
+## 1.6.5 Separation of Concerns
+
+The architecture separates:
+
+-   the **Platform**:
+    -   meta-model,
+    -   normative DSLs,
+    -   basic editors,
+    -   basic validations,
+    -   basic generators,
+    -   runtime API contract.
+-   the **Products**:
+    -   product-specific DSLs and DSL extensions like profiles, editors, validations, generators, ...
+    -   concrete runtime implementations,
+    -   integration and application logic,
+    -   distribution packages.
+    -   VCS integrations
+
+Products MAY introduce additional DSL languages and extensions on top of the platform meta-model, provided they remain compatible with the platform semantics and the RuntimeApi contract.
+
+``` mermaid
+flowchart LR
+    DSL["Platform DSL"]
+    API["RuntimeApi DSL"]
+    REF["Reference Runtime"]
+    PROD["Product Runtime"]
+
+    DSL --> API
+    API --> REF
+    API --> PROD
+```
+
+This ensures: - a stable platform core, - independent evolution of
+products, - reuse of DSLs across implementations.
+
+## 1.6.6 Benefits of the Ecosystem Architecture
+
+The proposed architecture provides:
+
+-   **Isolation of the platform** from product complexity,
+-   **Iterative platform development** using the reference runtime,
+-   **Pluggable runtimes** for different products,
+-   **Full utilization of MPS** for design-time tooling,
+-   **Extensibility** of the ecosystem by third parties.
+
+This structure establishes a solid foundation for the long-term
+evolution of the Modustro platform and its family of products.
 
 
 ---
@@ -849,7 +1117,14 @@ All concrete DSL elements that are part of platform models must satisfy:
 There are two principal categories:
 
 - **ObjectDef** – defining element; owns properties that introduce or declare something.
-- **ObjectRef** – referencing element; points to some ObjectDef via `defGuid` or an equivalent mechanism.
+- **ObjectPropertyValue** - predecessor for all possible property value encapsulators 
+- **SimpleObjectPropertyValue** - value represented by the simple value, defined mainly in TD
+- **ReferenceObjectPropertyValue** – foreign-key-like semantic structure - refernce to other ObjectDef, as the type of the type ObjectRef
+- **ObjectPropertyDef** - predecessor for all possible property value definitions
+- **SimpleObjectPropertyDef** - value represented by the simple value, defined mainly in TD
+- **ReferenceObjectPropertyDef** – foreign-key-like semantic structure
+- **ObjectProperty** consisting from the object property definition and value
+- **ObjectRef** – descendant of ObjectProperty, referencing element; points to some ObjectDef via direct pointer or indirectly via `defGuid` or an equivalent mechanism.
 
 ### 2.3 Core Object Types
 
@@ -888,6 +1163,25 @@ Rules:
 Represents an ordered collection of ObjectDef elements.
 
 The precise ordering semantics (e.g. deterministic storage order) are defined in product‑side documents. The platform only requires that a list is a sequence and that order must be stable enough for tooling.
+
+Each ObjectDefListDef SHALL provide exactly two canonical orders:
+
+1. definedOrder():
+   The domain-defined order of elements, reflecting either:
+    - explicit order defined by the user, or
+    - the AST child order if no explicit user order is defined.
+      This order represents the user's intended semantic ordering.
+
+2. guidOrder():
+   A deterministic technical order obtained by sorting elements
+   lexicographically by their GUID.
+   This order SHALL be used for persistence, sealing, hashing,
+   and conflict-free replication.
+
+No other global ordering semantics are defined by the platform.
+Any additional grouping, filtering, or alternative ordering
+MUST be applied explicitly at the point of use.
+
 
 #### 2.3.4 ObjectRefListDef
 
@@ -995,6 +1289,18 @@ Key properties:
 - Optional metadata (documentation, tags, domain constraints).
 
 AS is the **single logical source** from which specialized schema DSLs (DS, IS) derive.
+
+**Purpose:** Define a technology‑agnostic schema-level structure of entities, fields, and relationships.
+
+AS provides:
+- **Entity** – top-level schema objects
+- **Field** – referencing TD types or other entities (abstract)
+- **Multiplicity rules** – optional, required, 1:1, 1:n, n:n
+- **Logical naming** – stable identifiers independent of any target system
+- **Physical naming proposals** – optional rules for derived names
+- **Abstract constraints** – cardinality, required fields, default values
+
+AS is the backbone for both database schemas and interchange schemas.
 
 #### 3.3.2 Type Domain DSL (mdstr.plat.td)
 
@@ -1304,16 +1610,16 @@ Example:
 <mdstr.plat.td:TypeDef
     mdstr.plat.core:guid="59fdbf05-b9c8-4f32-bb7c-88d2a83f5a13"
     mdstr.prod.audit:xxx="aaa"
-	mdstr.prod.rt:yyy="rrr"
+	mdstr.prod.rs:yyy="rrr"
     >
     <core:Name
 		mdstr.plat.core:guid="59fdbf05-b9c8-4f32-bb7c-88d2a83fnnn"
 		mdstr.prod.audit:xxx="aaa"
-		mdstr.prod.rt:yyy="rrr">Email</core:Name>
+		mdstr.prod.rs:yyy="rrr">Email</core:Name>
     <td:BaseType 
         mdstr.plat.core:guid="59fdbf05-b9c8-4f32-bb7c-88d2a83fbbb"
 		mdstr.prod.audit:xxx="aaa"
-		mdstr.prod.rt:yyy="rrr">string</td:BaseType>
+		mdstr.prod.rs:yyy="rrr">string</td:BaseType>
 </mdstr.plat.td:TypeDef>
 ```
 
@@ -1330,16 +1636,16 @@ because identity is global platform semantics.
 	<mdstr.plat.td:TypeDef
 		mdstr.plat.core:guid="59fdbf05-b9c8-4f32-bb7c-88d2a83f5a13"
 		mdstr.prod.audit:xxx="aaa"
-		mdstr.prod.rt:yyy="rrr"
+		mdstr.prod.rs:yyy="rrr"
 	>
 		<core:Name
 			mdstr.plat.core:guid="59fdbf05-b9c8-4f32-bb7c-88d2a83fnnn"
 			mdstr.prod.audit:xxx="aaa"
-			mdstr.prod.rt:yyy="rrr">Email</core:Name>
+			mdstr.prod.rs:yyy="rrr">Email</core:Name>
 		<td:BaseType
 			mdstr.plat.core:guid="59fdbf05-b9c8-4f32-bb7c-88d2a83fbbb"
 			mdstr.prod.audit:xxx="aaa"
-			mdstr.prod.rt:yyy="rrr">string</td:BaseType>
+			mdstr.prod.rs:yyy="rrr">string</td:BaseType>
 
         <mdstr.plat.td:TypeConstraintDefListDef>
             <mdstr.plat.td:TypeConstraintDef
@@ -1347,8 +1653,8 @@ because identity is global platform semantics.
                 regex="^[^@]+@[^@]+$"
                 mdstr.plat.core:guid="8c9d8fe6-a4b7-41c7-a71f-a7acb4f1cbc5"
 				mdstr.prod.audit:xxx="aaa"
-				mdstr.prod.rt:yyy="rrr">
-                <mdstr.prod.rt:OOOO>....</mdstr.prod.rt:OOOO>
+				mdstr.prod.rs:yyy="rrr">
+                <mdstr.prod.rs:OOOO>....</mdstr.prod.rs:OOOO>
             </mdstr.plat.td:TypeConstraintDef>
 			...
 		</mdstr.plat.td:TypeConstraintDefListDef>
@@ -1358,15 +1664,15 @@ because identity is global platform semantics.
     <mdstr.plat.td:TypeDef
 		mdstr.plat.core:guid="59fdbf05-b9c8-4f32-bb7c-88d2a83f5a13"
 		mdstr.prod.audit:xxx="aaa"
-		mdstr.prod.rt:yyy="rrr">
+		mdstr.prod.rs:yyy="rrr">
         <core:Name
             mdstr.plat.core:guid="59fdbf05-b9c8-4f32-bb7c-88d2a83fnnnn"
             mdstr.prod.audit:xxx="aaa"
-            mdstr.prod.rt:yyy="rrr">UUID</core:Name>
+            mdstr.prod.rs:yyy="rrr">UUID</core:Name>
         <td:BaseType
             mdstr.plat.core:guid="59fdbf05-b9c8-4f32-bb7c-88d2a83fbbbb"
             mdstr.prod.audit:xxx="aaa"
-            mdstr.prod.rt:yyy="rrr">string</td:BaseType>
+            mdstr.prod.rs:yyy="rrr">string</td:BaseType>
         ...
     </mdstr.plat.td:TypeDef>
 </mdstr.plat.td:TypeDefListDef>

@@ -38,19 +38,6 @@ TD is the “type factory” of the whole Modustro ecosystem.
 ---
 
 ### 2.2 AbstractSchema DSL (AS)
-**Purpose:** Define a technology‑agnostic schema-level structure of entities, fields, and relationships.
-
-AS provides:
-- **Entity** – top-level schema objects
-- **Field** – referencing TD types or other entities (abstract)
-@TODO - complete description - **DomainValueField** - ?????
-    - **EntityReferenceField** – foreign-key-like semantic structure
-- **Multiplicity rules** – optional, required, 1:1, 1:n, n:n
-- **Logical naming** – stable identifiers independent of any target system
-- **Physical naming proposals** – optional rules for derived names
-- **Abstract constraints** – cardinality, required fields, default values
-
-AS is the backbone for both database schemas and interchange schemas.
 
 ---
 
