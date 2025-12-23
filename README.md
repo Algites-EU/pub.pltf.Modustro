@@ -3,7 +3,7 @@
 # Modustro Platform
 
 Modustro Platform is the foundational layer of the Modustro ecosystem.  
-It contains the core DSL, modeling infrastructure, runtime engine, generators, 
+It contains the core DSL, modeling infrastructure, runtime engine API, basic editors and generators, 
 and all architectural modules that define Modustro as a model‑driven engineering platform.
 
 ---
