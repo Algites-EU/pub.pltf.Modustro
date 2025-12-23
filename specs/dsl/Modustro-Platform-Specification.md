@@ -1,5 +1,33 @@
 # Modustro Platform Specification
 
+## Preamble – The Spirit of Modustro
+
+Modustro is founded on the belief that software systems should be shaped by the domains they serve,
+not constrained by the tools that implement them.
+Instead of adapting problems to generic frameworks, Modustro empowers architects and developers
+to use or even define or extend precise domain languages based on a universal platform. To customize 
+and build their own modeling tools and generator systems that reflect their true intent.
+
+At the entrance to the Modustro ecosystem stands **Modustro Prometheus** — the canonical reference
+implementation of a product based on the platform.
+Named after the mythological bringer of fire, Prometheus embodies the idea of making foundational
+power accessible: providing the essential runtime, APIs, and tooling that enable others to create,
+extend, and innovate.
+
+Modustro does not aim to replace one closed toolbox with another.
+Its purpose is to open the meta-level itself — to give control over languages, models, and
+transformations back to those who build and maintain complex systems.
+
+Building on this foundation, **Modustro Studio by Algites** represents a full-fledged commercial
+realization of the Modustro vision.
+It combines the power of the platform with advanced runtime capabilities, integrated tooling,
+and professional support, delivering a production-ready environment for organizations that rely
+on domain-driven modeling at scale.
+
+In this sense, Modustro Prometheus is not the destination, but the spark:
+a baseline from which products, studios, and ecosystems can grow — while Modustro Studio
+transforms that spark into a sustainable, industrial-grade solution.
+
 ## 0. Introduction
 
 The Modustro Platform Specification defines the stable, public modeling surface of the Modustro ecosystem.  
