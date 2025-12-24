@@ -35,7 +35,7 @@ transforms that spark into a sustainable, industrial-grade solution.
 ## 0. Introduction
 
 The Modustro Platform Specification defines the stable, public modeling surface of the Modustro ecosystem.  
-It describes the **CoreDSL** and **Design DSLs** (Type, Schema, Profile, etc.), their relationships and namespaces, and the rules that every Modustro-compatible product must follow when creating, transforming, or analyzing models.
+It describes the **Core DSL** and **Design DSLs** (Type, Schema, Profile, etc.), their relationships and namespaces, and the rules that every Modustro-compatible product must follow when creating, transforming, or analyzing models.
 
 This document **does not** prescribe any particular runtime implementation/solution, persistence format, UI, or IDE integration. Those aspects belong to product‑specific documentation and the Product Internal Specification of the various products, which may be based on the Modustro Platform Specification.
 
@@ -98,8 +98,10 @@ This document is intended for:
 - **Node / Element** – an instance of some DSL concept (e.g. EntityDef, TypeDef).
 - **guid** – a globally unique identifier for an element, stable across time.
 - **Def / Ref** – *Def* denotes a defining element (e.g. EntityDef); *Ref* denotes a reference element pointing to a Def.
-- **CoreDSL** – common super‑layer for all design DSLs; provides identity and generic abstraction.
-- **DesignDSL** – user‑facing modeling DSLs: AP, AS, DS, IS, AP, etc.
+- **Core DSL** – common super‑layer for all design DSLs; provides identity and generic abstraction.
+- **Design DSL** – user‑facing modeling DSLs: AP, AS, DS, IS, AP, etc.
+- **RuntimeApi DSL** – General Runtime interface which is intended to communicate the data between the Design DLSs 
+  and runtime solution implementing the desired user functionality.
 
 ---
 
