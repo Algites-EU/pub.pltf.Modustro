@@ -261,7 +261,7 @@ This philosophy is foundational for the Modustro ecosystem and is not subject to
 
 ### Naming
 - All modules use prefix `modustro`
-- Language namespaces - Example: `eu.modustro.plat.*`
+- Language namespaces - Example: `eu.modustro.pltf.*`
 - Generators - Example: `modustro.gen.*`
 
 ### Versioning
