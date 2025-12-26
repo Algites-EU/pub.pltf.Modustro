@@ -1234,11 +1234,296 @@ Represents an reference to ordered collection of ObjectRef elements.
 
 #### 2.3.7 StorageSegmentGroupDef
 
+`StorageSegmentGroupDef` defines a logical grouping of storage segments.
+It represents a higher-level classification used to organize multiple storage segments
+that share common operational or infrastructural characteristics (e.g., same disk, directory,
+tablespace, shard, or performance tier).
+
+Storage segment groups are defined in the Core DSL to allow Runtime Solutions to interpret
+and map them to concrete physical resources.
+
+##### Fields
+
+- **code : String**  
+  Stable alphanumeric identifier used for generation and runtime mapping.
+
+- **displayLabel : Map<String, String>**  
+  Localized human-readable labels, keyed by `languageCode` (e.g., `"en"`, `"cs"`, `"de"`).
+
+- **description : String [0..1]**  
+  Optional non-localized description of the purpose of the group.
+
+##### Semantics
+
+A StorageSegmentGroupDef:
+
+- groups multiple `StorageSegmentDef` instances,
+- does not directly contain persistence logic,
+- serves as a hint for runtime implementations to co-locate or manage segments together.
+
+##### Normative Rules
+
+- A `StorageSegmentGroupDef` MUST have a globally unique `code` within its scope.
+- A group MAY contain zero or more `StorageSegmentDef` instances.
+- Each segment MAY reference at most one group.
+
+##### MPS-like Skeleton
+
+```mps
+concept StorageSegmentGroupDef {
+  property code : string;
+  property displayLabel : map<string,string>;
+  property description : string;
+}
+```
+
+---
+
 #### 2.3.8 StorageSegmentDef
+
+`StorageSegmentDef` defines a logical storage segment used either for external persistence
+or for runtime intermediate storage.
+
+It abstracts from concrete storage technology and provides a stable identifier used by
+the runtime engine to route persistence and storage operations.
+
+##### Fields
+
+- **code : String**  
+  Stable alphanumeric identifier used for generation and runtime mapping.
+
+- **displayLabel : Map<String, String>**  
+  Localized human-readable labels keyed by `languageCode`.
+
+- **group : StorageSegmentGroupDef [0..1]**  
+  Optional reference to a storage segment group this segment belongs to.
+
+- **description : String [0..1]**  
+  Optional description of the segment’s intended purpose.
+
+##### Semantics
+
+A StorageSegmentDef:
+
+- represents one logical storage target,
+- may correspond to:
+    - an external snapshot artifact (file, document, resource),
+    - or a runtime storage partition (table, collection, index group),
+- is interpreted by Runtime Solutions according to their own storage model.
+
+##### Normative Rules
+
+- A `StorageSegmentDef` MUST have a unique `code`.
+- Each segment MAY reference at most one `StorageSegmentGroupDef`.
+- Segment `code` MUST be stable across versions unless explicit migration is defined.
+
+##### MPS-like Skeleton
+
+```mps
+concept StorageSegmentDef {
+  property code : string;
+  property displayLabel : map<string,string>;
+  property description : string;
+  reference group : StorageSegmentGroupDef;
+}
+```
+
+---
 
 #### 2.3.9 PackageDef
 
+`PackageDef` defines a hierarchical logical container used to organize model elements
+and types within Modustro.
 
+Packages form a tree structure and serve as the base abstraction for both business-level
+and DSL-structure-level packaging.
+
+##### Fields
+
+- **code : String**  
+  Stable alphanumeric identifier used for generation and mapping.
+
+- **displayLabel : Map<String, String>**  
+  Localized human-readable labels keyed by `languageCode`.
+
+- **description : String [0..1]**  
+  Optional description of the package purpose.
+
+- **parent : PackageDef [0..1]**  
+  Optional reference to the parent package. The root package has no parent.
+
+##### Semantics
+
+A PackageDef:
+
+- represents a logical namespace and grouping unit,
+- provides hierarchical structuring,
+- carries no persistence or technical meaning by itself.
+
+##### Normative Rules
+
+- A `PackageDef` MUST have a `code` unique within its parent.
+- Every package except the root MUST reference exactly one parent.
+- The package hierarchy MUST form a tree (no cycles).
+- Packages MUST NOT change the semantic meaning of contained elements.
+
+##### MPS-like Skeleton
+
+```mps
+concept PackageDef {
+  property code : string;
+  property displayLabel : map<string,string>;
+  property description : string;
+  reference parent : PackageDef;
+}
+```
+
+---
+
+##### 2.3.9.1 ModelBusinessPackageDef
+
+`ModelBusinessPackageDef` specializes `PackageDef` for business- and project-level structuring
+of user models.
+
+It represents how domain elements are organized according to business architecture and is used
+primarily by generators and profiles to derive target layouts.
+
+##### Additional Fields
+
+- **storageSegment : StorageSegmentDef**  
+  Reference to the storage segment associated with this business package.
+
+##### Semantics
+
+A ModelBusinessPackageDef:
+
+- organizes user-defined domain elements,
+- may be mapped to technical targets such as:
+    - Java packages,
+    - database schemas,
+    - tablespaces,
+    - modules or bounded contexts,
+- provides a single storage segment hint for external persistence when needed.
+
+##### Normative Rules
+
+- `ModelBusinessPackageDef` MUST extend `PackageDef`.
+- It MUST reference exactly one `StorageSegmentDef`.
+- Mapping to concrete technical targets is defined by profiles or generators.
+- Business packages MUST NOT affect platform runtime storage unless explicitly mapped.
+
+##### MPS-like Skeleton
+
+```mps
+concept ModelBusinessPackageDef extends PackageDef {
+  reference storageSegment : StorageSegmentDef;
+}
+```
+
+---
+
+##### 2.3.9.2 DslStructurePackageVersionDef
+
+`DslStructurePackageVersionDef` represents one concrete version of a DSL structure package.
+It captures the storage semantics valid for a specific DSL version and is used for
+backward-compatible import and migration.
+
+##### Additional Fields
+
+- **version : String**  
+  Version identifier of this structure package (e.g., "1.0", "2.1").
+
+- **externalStorageSegment : StorageSegmentDef**  
+  Storage segment used for external snapshot persistence.
+
+- **runtimeStorageSegment : StorageSegmentDef**  
+  Storage segment used for runtime intermediate storage.
+
+##### Semantics
+
+A DslStructurePackageVersionDef:
+
+- binds one DSL structure package version to its storage layout,
+- is referenced during import of historical snapshots,
+- enables migration to current definitions.
+
+##### Normative Rules
+
+- `DslStructurePackageVersionDef` MUST extend `PackageDef`.
+- It MUST define a `version`.
+- It MUST reference exactly one ExternalStorageSegment.
+- It MUST reference exactly one RuntimeStorageSegment.
+- The mapping MUST be deterministic and stable for the given version.
+
+##### MPS-like Skeleton
+
+```mps
+concept DslStructurePackageVersionDef extends PackageDef {
+  property version : string;
+  reference externalStorageSegment : StorageSegmentDef;
+  reference runtimeStorageSegment : StorageSegmentDef;
+}
+```
+
+---
+
+##### 2.3.9.3 DslStructurePackageDef
+
+`DslStructurePackageDef` represents the current definition of a DSL structure package.
+It defines the active storage mapping and maintains references to historical versions
+for migration and backward compatibility.
+
+##### Additional Fields
+
+- **currentVersion : DslStructurePackageVersionDef**  
+  Reference to the active version definition.
+
+- **previousVersions : DslStructurePackageVersionDef [0..*]**  
+  List of historical versions of this structure package.
+
+##### Semantics
+
+A DslStructurePackageDef:
+
+- classifies DSL concept types (e.g., EntityDef, FieldDef, ProfileDef),
+- drives Type Descriptor derivation,
+- determines current persistence and runtime routing behavior,
+- provides access to historical layouts for import and migration.
+
+##### Normative Rules
+
+- `DslStructurePackageDef` MUST reference exactly one currentVersion.
+- It MAY reference zero or more previousVersions.
+- All versions MUST share the same logical package identity (`code` hierarchy).
+- Historical versions MUST NOT be modified once released.
+- Migration logic MUST map from previous versions to the current version.
+
+##### MPS-like Skeleton
+
+```mps
+concept DslStructurePackageDef {
+  reference currentVersion : DslStructurePackageVersionDef;
+  reference previousVersions : DslStructurePackageVersionDef;
+}
+```
+
+---
+
+##### Summary
+
+The Core DSL defines the following foundational concepts:
+
+- **StorageSegmentGroupDef** — groups storage segments for infrastructural concerns.
+- **StorageSegmentDef** — defines logical storage targets.
+- **PackageDef** — provides hierarchical logical structuring with stable codes and localized labels.
+- **ModelBusinessPackageDef** — business/project packaging with a single storage segment.
+- **DslStructurePackageVersionDef** — versioned structure package with storage mappings.
+- **DslStructurePackageDef** — current structure package with historical versions.
+
+Together, these concepts define the foundation for deterministic persistence,
+runtime storage routing, project organization, and safe evolution in Modustro.
+
+---
 
 #### 2.3.10 Summary of general approach to Object elements in Core DSL
 
