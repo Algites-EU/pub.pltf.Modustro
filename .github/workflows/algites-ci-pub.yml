@@ -1,0 +1,10 @@
+# .github/workflows/algites-ci-pub.yml
+name: Algites CI Process (Public)
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  ci:
+    uses: Algites-EU/priv.tool.Java/.github/workflows/algites-universal-github-ci-pub.yml@main

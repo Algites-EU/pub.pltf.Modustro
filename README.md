@@ -315,4 +315,14 @@ for Roadmap see the document specs/
 Author: Artur Linhart  
 Project: Modustro — Model‑Driven Application Architecture  
 
+
+## 🔄 Continuous Integration (Algites CI)
+
+This repository uses the **Algites unified GitHub Actions CI pipeline** (build/test/publish rules are centralized).
+
+For exact usage and naming of the branches to utilize fully the defined possibilities, see
+https://github.com/Algites-EU/pub.gov.Algites.specs/blob/main/ci/Algites-Github-CI-Policy.md
+
+---
+
 [[/UNCONFIRMED]]
