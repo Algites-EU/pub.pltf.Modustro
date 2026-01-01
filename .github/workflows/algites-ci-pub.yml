@@ -1,5 +1,4 @@
-# .github/workflows/algites-ci-pub.yml
-name: Algites CI Process (Public)
+name: Algites CI (Public)
 
 on:
   push:
@@ -7,8 +6,8 @@ on:
 
 permissions:
   contents: read
-  packages: write
 
 jobs:
   ci:
-    uses: Algites-EU/priv.tool.Java/.github/workflows/algites-universal-github-ci-pub.yml@main
+    uses: Algites-EU/pub.gov.Algites.devops/.github/workflows/algites-universal-github-pub-devops-ci-pub-wrapper.yml@main
+    secrets: inherit
