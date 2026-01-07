@@ -1,0 +1,10 @@
+#IDEA:
+**/*.iml
+
+# Gradle
+.gradle/
+**/.gradle/
+
+# Build outputs (u vás do run/)
+run/*
+**/run/*

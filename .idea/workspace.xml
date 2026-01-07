@@ -4,7 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bdc80299-c1e4-4221-8759-dfa4a8ea8c4a" name="Changes" comment="Added the integration to Githum ALgites CI Process">
+    <list default="true" id="bdc80299-c1e4-4221-8759-dfa4a8ea8c4a" name="Changes" comment="Fix of github action">
+      <change afterPath="$PROJECT_DIR$/.github/workflows/algites-create-lane-pub.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.github/workflows/algites-packages-retention-pub.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.github/workflows/algites-release-pub.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.github/workflows/algites-ci-pub.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/algites-ci-pub.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -21,12 +25,12 @@
     &quot;assignee&quot;: &quot;ArturLinhart&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/Algites-EU/pub.pltf.Modustro.git",
-    "accountId": "d13b6403-a745-4bd1-bec8-c0697dd78a8f"
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/Algites-EU/pub.pltf.Modustro.git&quot;,
+    &quot;accountId&quot;: &quot;d13b6403-a745-4bd1-bec8-c0697dd78a8f&quot;
   }
-}]]></component>
+}</component>
   <component name="MavenImportPreferences">
     <option name="generalSettings">
       <MavenGeneralSettings>
@@ -46,28 +50,29 @@
     <option name="showLibraryContents" value="true" />
     <option name="showScratchesAndConsoles" value="false" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "main",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "/home/linhart1/Work/Algites/github/git/platform.Modustro",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Project",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.3203267",
-    "settings.editor.selected.configurable": "MavenSettings",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/linhart1/Work/Algites/github/git/platform.Modustro/.github/workflows&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.3203267&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;MavenSettings&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/.github/workflows" />
       <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/specs/dsl" />
       <recent name="$PROJECT_DIR$/specs" />
@@ -145,7 +150,9 @@
       <workItem from="1766223674327" duration="47558000" />
       <workItem from="1766754396917" duration="604000" />
       <workItem from="1766756452829" duration="1768000" />
-      <workItem from="1766760132274" duration="5071000" />
+      <workItem from="1766760132274" duration="6369000" />
+      <workItem from="1767168394550" duration="762000" />
+      <workItem from="1767244273306" duration="1149000" />
     </task>
     <task id="LOCAL-00001" summary="Initial commit with basic unconfirmed README.md generated by AI">
       <option name="closed" value="true" />
@@ -291,7 +298,15 @@
       <option name="project" value="LOCAL" />
       <updated>1766924331853</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="Fix of github action">
+      <option name="closed" value="true" />
+      <created>1766926429179</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1766926429179</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -326,6 +341,7 @@
     <MESSAGE value="Dpc improvement- REuntime Api added to the Design DSLs." />
     <MESSAGE value="First version of the documentation of the structures StorageSegmentGroupDef, StorageSegmentDef and PackageDef generated" />
     <MESSAGE value="Added the integration to Githum ALgites CI Process" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added the integration to Githum ALgites CI Process" />
+    <MESSAGE value="Fix of github action" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fix of github action" />
   </component>
 </project>
