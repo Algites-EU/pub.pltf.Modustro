@@ -5,10 +5,10 @@ on:
   workflow_dispatch:
     inputs:
       source_lane:
-        description: "Source lane (e.g. 1.1.x)"
+        description: "Source lane (e.g. 1.1)"
         required: true
       new_lane:
-        description: "New lane (e.g. 1.2.x)"
+        description: "New lane (e.g. 1.2)"
         required: true
       variants:
         description: "auto (discover) or explicit"

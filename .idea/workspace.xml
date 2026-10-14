@@ -4,17 +4,20 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bdc80299-c1e4-4221-8759-dfa4a8ea8c4a" name="Changes" comment="Fix of github action">
-      <change afterPath="$PROJECT_DIR$/.github/workflows/algites-create-lane-pub.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.github/workflows/algites-packages-retention-pub.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.github/workflows/algites-release-pub.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.github/workflows/algites-ci-pub.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/algites-ci-pub.yml" afterDir="false" />
+    <list default="true" id="bdc80299-c1e4-4221-8759-dfa4a8ea8c4a" name="Changes" comment="Repository refactorings">
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.github/workflows/algites-create-lane-pub.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/algites-create-lane-pub.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/platform/specs/Modustro-Roadmap.md" beforeDir="false" afterPath="$PROJECT_DIR$/platform/specs/Modustro-Roadmap.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="EmbeddingIndexingInfo">
+    <option name="cachedIndexableFilesCount" value="17" />
+    <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -39,6 +42,10 @@
       </MavenGeneralSettings>
     </option>
   </component>
+  <component name="McpProjectServerCommands">
+    <commands />
+    <urls />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 3
 }</component>
@@ -52,12 +59,18 @@
   </component>
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
+    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultAutoModeForALLUsers.v1&quot;: &quot;true&quot;,
+    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/linhart1/Work/Algites/github/git/platform.Modustro/.github/workflows&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/linhart1/Work/Algites/github/git/pub.pltf.Modustro&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -66,7 +79,8 @@
     &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.3203267&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;MavenSettings&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;Errors&quot;,
+    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
@@ -122,8 +136,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9823dce3aa75-bf35d07a577b-intellij.indexing.shared.core-IU-252.28238.7" />
-        <option value="bundled-js-predefined-d6986cc7102b-a71380e98a7c-JavaScript-IU-252.28238.7" />
+        <option value="bundled-jdk-30f59d01ecdd-a203e0a19954-intellij.indexing.shared.core-IU-262.10968.63" />
+        <option value="bundled-js-predefined-d6986cc7102b-4abd2a77f808-JavaScript-IU-262.10968.63" />
       </set>
     </attachedChunks>
   </component>
@@ -153,6 +167,33 @@
       <workItem from="1766760132274" duration="6369000" />
       <workItem from="1767168394550" duration="762000" />
       <workItem from="1767244273306" duration="1149000" />
+      <workItem from="1767785809843" duration="229000" />
+      <workItem from="1767786123376" duration="3023000" />
+      <workItem from="1767789477990" duration="111000" />
+      <workItem from="1767789598015" duration="2140000" />
+      <workItem from="1768229144711" duration="126000" />
+      <workItem from="1768229441404" duration="599000" />
+      <workItem from="1768234223233" duration="1660000" />
+      <workItem from="1769010937841" duration="593000" />
+      <workItem from="1769012905352" duration="2782000" />
+      <workItem from="1769285268767" duration="1806000" />
+      <workItem from="1769927312321" duration="1844000" />
+      <workItem from="1770562802068" duration="602000" />
+      <workItem from="1771490353227" duration="597000" />
+      <workItem from="1771938246670" duration="1188000" />
+      <workItem from="1772774864896" duration="1110000" />
+      <workItem from="1772799318511" duration="2465000" />
+      <workItem from="1773390759691" duration="597000" />
+      <workItem from="1773561608244" duration="599000" />
+      <workItem from="1774253572254" duration="77000" />
+      <workItem from="1774253922297" duration="599000" />
+      <workItem from="1775998735558" duration="598000" />
+      <workItem from="1778728154943" duration="597000" />
+      <workItem from="1779074148716" duration="599000" />
+      <workItem from="1781424784861" duration="1198000" />
+      <workItem from="1783427096856" duration="599000" />
+      <workItem from="1784275386121" duration="599000" />
+      <workItem from="1785741472285" duration="598000" />
     </task>
     <task id="LOCAL-00001" summary="Initial commit with basic unconfirmed README.md generated by AI">
       <option name="closed" value="true" />
@@ -306,7 +347,15 @@
       <option name="project" value="LOCAL" />
       <updated>1766926429179</updated>
     </task>
-    <option name="localTasksCounter" value="20" />
+    <task id="LOCAL-00020" summary="Repository refactorings">
+      <option name="closed" value="true" />
+      <created>1767785851614</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1767785851614</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -342,6 +391,11 @@
     <MESSAGE value="First version of the documentation of the structures StorageSegmentGroupDef, StorageSegmentDef and PackageDef generated" />
     <MESSAGE value="Added the integration to Githum ALgites CI Process" />
     <MESSAGE value="Fix of github action" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fix of github action" />
+    <MESSAGE value="Repository refactorings" />
+    <option name="LAST_COMMIT_MESSAGE" value="Repository refactorings" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
 </project>

@@ -292,7 +292,7 @@ Each wave builds on the previous, with increasing modeling power, extensibility,
 
 ### 6.2.4 Project Persistence v2 (Container Format & Migration Engine)
 
-- Introduction of `.modproj` project container (ZIP-based)
+- Introduction of `.modproj` project container
 - MMF v2 with schemaVersion field
 - Metadata file `metadata.json`
 - Project preview artifacts included in container
