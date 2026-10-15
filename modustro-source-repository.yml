@@ -1,0 +1,54 @@
+# yaml-language-server: $schema=https://defs.dev.algites.eu/api/yamldefs/eu/algites/tool/build/yamldefs/modustro-source-repository_1.yamldef.schema.json
+# $schema: https://defs.dev.algites.eu/api/yamldefs/eu/algites/tool/build/yamldefs/modustro-source-repository_1.yamldef.schema.json
+$schema: https://defs.dev.algites.eu/api/yamldefs/eu/algites/tool/build/yamldefs/modustro-source-repository_1.yamldef.schema.json
+
+SourceRepository:
+  Id: pub.pltf.Modustro
+  Name: Algites Modustro Open Source repository for project like Modustro Builder, Modustro Modeler and Modustro Operator
+
+GroupId: eu.algites.pltf.modustro
+
+Version:
+  ReleaseLineVersion: '1'
+  Revision: 0
+  QualifierKind: snapshot
+
+# Default publication policy preserves the normal repository publication behavior.
+# Snapshot invocation overrides may force individual output kinds on/off without affecting build/test/package.
+OutputPublications:
+- OutputSelector: native_product_outputs
+  TechnologyKind: java
+  Snapshot:
+    PublicationEnabled: true
+  Release:
+    PublicationEnabled: true
+- OutputSelector: native_product_outputs
+  TechnologyKind: python
+  Snapshot:
+    PublicationEnabled: true
+  Release:
+    PublicationEnabled: true
+- OutputSelector: native_develop_outputs
+  TechnologyKind: java
+  Snapshot:
+    PublicationEnabled: false
+  Release:
+    PublicationEnabled: false
+- OutputSelector: native_develop_outputs
+  TechnologyKind: python
+  Snapshot:
+    PublicationEnabled: false
+  Release:
+    PublicationEnabled: false
+- OutputSelector: modustro_docs_site
+  TechnologyKind: modustro
+  Snapshot:
+    PublicationEnabled: true
+  Release:
+    PublicationEnabled: true
+- OutputSelector: schema_site
+  TechnologyKind: modustro
+  Snapshot:
+    PublicationEnabled: true
+  Release:
+    PublicationEnabled: true
