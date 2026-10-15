@@ -46,11 +46,11 @@ Portable regression entry points cover recursive scheduling, all four barriers, 
 missing outputs, immutable snapshots, Maven build-record transport and Cloudsmith/Repsy snapshot cleanup. TestNG wrappers
 call the same check classes. The portable domain bridge additionally round-trips complete immutable result trees,
 validates missing/stale/duplicate domain results, and checks immutable atomic handoff storage. Gradle orchestration
-has separate TestKit coverage in `gradleinit`.
+has separate TestKit coverage in `gradle`.
 
 Run the publication regression suite with the standard Gradle `check` lifecycle (TestNG).
 This checks the publication/subscription/catalog packages and all core interfaces without external dependencies;
-it does not replace the full CoreImpl, Gradleinit, TestNG or generated-definition bootstrap checks.
+it does not replace the full CoreImpl, Gradle integration, TestNG or generated-definition bootstrap checks.
 
 The optional `builder/structureddata/jackson` artifact supplies YAML/JSON/XML representation mapping without putting Jackson on the core/bootstrap dependency path.
 

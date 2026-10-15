@@ -6,7 +6,7 @@ The staged migration deliberately separates the portable Builder model from the 
 
 - `coreintf` contains public Java contracts, immutable model types, and canonical machine-readable definitions;
 - `coreimpl` contains reusable Gradle-independent implementations such as inheritance resolution, model validation, and Java/Python dependency technology bridges;
-- `gradleinit` is the compiled Settings/Project integration edge; `devops/build/modustrobuild` supplies its runtime dependency bundle, and shared Gradle scripts provide execution adapters.
+- `gradle` is the compiled Settings/Project integration edge; `devops/build/modustrobuild` supplies its runtime dependency bundle, and shared Gradle scripts provide execution adapters.
 
 Phase 2 connects the active Algites dependency metadata bridge to the new semantics: `DependencyKind: modustro`, merge-only `Usages`, `RequiredBuildOutputTypes`, and per-technology Java/Python mapping. Phase 3 adds `PreparedSourceSet`, the hard-wired Gradle-independent BuildOutput producer registry, portable production plans, hierarchical `BuildOutputTypes` selection, and the active Gradle adapter for Java JAR/source/Javadoc outputs and Python wheel/sdist outputs.
 
@@ -54,12 +54,12 @@ registration is a bootstrap adapter over normalized input subscriptions.
 
 The Phase-6 portable core separates publication planning from provider execution. Global schema publication validates `GlobalPublicationPathId` at the trust boundary and maintains server-controlled draft/release metadata with monotonic draft revisions and immutable releases. Provider-specific publication is performed by PublicationAdapter implementations; generic ordering, retries, failure handling, deadlines, and progress remain scheduler responsibilities.
 
-## Compiled Gradle initialization
+## Compiled Gradle integration
 
-`gradleinit` replaces applied Settings discovery, metadata resolver and credential
+`gradle` replaces applied Settings discovery, metadata resolver and credential
 initialization scripts. Root Settings bootstrap a single artifact and activate its
 Settings plugin. Public defaults are packaged in the artifact; Builder Core keeps
-endpoint semantics and remains Gradle-independent. See [gradleinit](gradleinit/README.md)
+endpoint semantics and remains Gradle-independent. See [gradle](gradle/README.md)
 for the first-publication bootstrap and metadata-only helper mode.
 
 

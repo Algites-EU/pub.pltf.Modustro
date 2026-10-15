@@ -11,7 +11,7 @@ command -v algites-cloudsmith >/dev/null || { echo "algites-cloudsmith is requir
 cat > "$locTemporaryDirectory/settings.gradle" <<'GRADLE'
 pluginManagement { repositories { gradlePluginPortal(); mavenCentral() } }
 rootProject.name = 'modustro-builder-emergency-bootstrap'
-['yamldefs', 'modustrobuild', 'coreintf', 'jackson', 'coreimpl', 'gradleinit'].each { name ->
+['yamldefs', 'modustrobuild', 'coreintf', 'jackson', 'coreimpl', 'gradle'].each { name ->
     include ':' + name
 }
 GRADLE
@@ -34,14 +34,14 @@ subprojects {
 }
 GRADLE
 
-locModules=(yamldefs modustrobuild coreintf jackson coreimpl gradleinit)
+locModules=(yamldefs modustrobuild coreintf jackson coreimpl gradle)
 locSources=(
     "$locRepositoryDirectory/devops/build/yamldefs"
     "$locRepositoryDirectory/devops/build/modustrobuild"
     "$locBuilderDirectory/coreintf"
     "$locBuilderDirectory/structureddata/jackson"
     "$locBuilderDirectory/coreimpl"
-    "$locBuilderDirectory/gradleinit"
+    "$locBuilderDirectory/gradle"
 )
 for locIndex in "${!locModules[@]}"; do
     locModule="${locModules[$locIndex]}"
@@ -50,10 +50,10 @@ for locIndex in "${!locModules[@]}"; do
         ln -s "${locSources[$locIndex]}/src" "$locTemporaryDirectory/$locModule/src"
     fi
 done
-# The actual gradleinit build defines both Settings/Project plugin descriptors.
-cp "$locBuilderDirectory/gradleinit/build.gradle.kts" "$locTemporaryDirectory/gradleinit/build.gradle.kts"
+# The actual gradle build defines both Settings/Project plugin descriptors.
+cp "$locBuilderDirectory/gradle/build.gradle.kts" "$locTemporaryDirectory/gradle/build.gradle.kts"
 # The standalone temporary project must embed the same repository defaults.
-python3 - "$locTemporaryDirectory/gradleinit/build.gradle.kts" "$locRepositoryDirectory/repository/defaults" <<'PYTHON'
+python3 - "$locTemporaryDirectory/gradle/build.gradle.kts" "$locRepositoryDirectory/repository/defaults" <<'PYTHON'
 from pathlib import Path
 import sys
 locFile = Path(sys.argv[1])
@@ -149,10 +149,10 @@ if [[ -n "${MODUSTRO_GRADLE_EXECUTABLE:-}" ]]; then
 fi
 "${locGradleCommand[@]}" --no-daemon --project-dir "$locTemporaryDirectory" \
     -Pmodustro.builder.bootstrapVersion="$locVersion" \
-    -Pmodustro.gradleinit.version="$locVersion" \
+    -Pmodustro.gradle.version="$locVersion" \
     :yamldefs:publishToMavenLocal :coreintf:publishToMavenLocal \
     :jackson:publishToMavenLocal :coreimpl:publishToMavenLocal \
-    :modustrobuild:publishToMavenLocal :gradleinit:publishToMavenLocal
+    :modustrobuild:publishToMavenLocal :gradle:publishToMavenLocal
 
 # Build Python distributions independently of the Modustro Gradle plugin.
 # The workspace merges namespace package trees from all Python source roots,
