@@ -1,0 +1,535 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/Algites-EU/pub.pltf.Modustro/main/platform/builder/coreintf/src/product/yamldefs/eu/algites/tool/build/yamldefs/modustro-builder-publications_1.yamldef.schema.json",
+  "title": "Modustro Builder Output Publications v1",
+  "description": "Defines inheritable output publication configuration and publication/output/artifact/Version-Scope finalization barriers.",
+  "$defs": {
+    "NestedGradleSettingsBuildPolicy": {
+      "type": "string",
+      "enum": [
+        "ignore_nested_settings",
+        "use_isolated_build_on_nested_settings"
+      ],
+      "default": "ignore_nested_settings"
+    },
+    "BuildExecutionFailurePolicy": {
+      "$ref": "https://defs.dev.algites.eu/api/yamldefs/eu/algites/pltf/modustro/builder/model/execution/build-execution-failure-policy_1.yamldef.schema.json"
+    },
+    "FinalizationAction": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Id": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "ExecutionEnabled": {
+          "type": "boolean",
+          "default": true
+        },
+        "ExecutionOrder": {
+          "type": "integer",
+          "default": 0,
+          "description": "Local order among sibling actions. Lower groups run first; equal values may run concurrently."
+        },
+        "Configuration": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "RetryCount": {
+          "type": "integer",
+          "minimum": 0,
+          "default": 0
+        },
+        "WaitForNextAttemptMillis": {
+          "type": "integer",
+          "minimum": 0,
+          "default": 1000
+        },
+        "AttemptTimeoutMillis": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "ShowProgressIfPossible": {
+          "type": "boolean",
+          "default": true
+        },
+        "FinalizationActionAdapter": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "TargetPublicationEndpointId": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "FinalizationActions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/FinalizationAction"
+          }
+        },
+        "ExecutionFailurePolicy": {
+          "$ref": "#/$defs/BuildExecutionFailurePolicy"
+        }
+      },
+      "required": [
+        "Id"
+      ],
+      "minProperties": 1
+    },
+    "PublicationFinalizationAction": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Id": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "ExecutionEnabled": {
+          "type": "boolean",
+          "default": true
+        },
+        "ExecutionOrder": {
+          "type": "integer",
+          "default": 0,
+          "description": "Local order among sibling actions. Lower groups run first; equal values may run concurrently."
+        },
+        "Configuration": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "RetryCount": {
+          "type": "integer",
+          "minimum": 0,
+          "default": 0
+        },
+        "WaitForNextAttemptMillis": {
+          "type": "integer",
+          "minimum": 0,
+          "default": 1000
+        },
+        "AttemptTimeoutMillis": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "ShowProgressIfPossible": {
+          "type": "boolean",
+          "default": true
+        },
+        "PublicationFinalizationActionAdapter": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "TargetPublicationEndpointId": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "FinalizationActions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/FinalizationAction"
+          }
+        },
+        "ExecutionFailurePolicy": {
+          "$ref": "#/$defs/BuildExecutionFailurePolicy"
+        }
+      },
+      "required": [
+        "Id"
+      ],
+      "minProperties": 1
+    },
+    "OutputPublicationFinalizationAction": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Id": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "ExecutionEnabled": {
+          "type": "boolean",
+          "default": true
+        },
+        "ExecutionOrder": {
+          "type": "integer",
+          "default": 0,
+          "description": "Local order among sibling actions. Lower groups run first; equal values may run concurrently."
+        },
+        "Configuration": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "RetryCount": {
+          "type": "integer",
+          "minimum": 0,
+          "default": 0
+        },
+        "WaitForNextAttemptMillis": {
+          "type": "integer",
+          "minimum": 0,
+          "default": 1000
+        },
+        "AttemptTimeoutMillis": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "ShowProgressIfPossible": {
+          "type": "boolean",
+          "default": true
+        },
+        "OutputPublicationFinalizationActionAdapter": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "ExecutionFailurePolicy": {
+          "$ref": "#/$defs/BuildExecutionFailurePolicy"
+        }
+      },
+      "required": [
+        "Id"
+      ],
+      "minProperties": 1
+    },
+    "ArtifactPublicationFinalizationAction": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Id": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "ExecutionEnabled": {
+          "type": "boolean",
+          "default": true
+        },
+        "ExecutionOrder": {
+          "type": "integer",
+          "default": 0,
+          "description": "Local order among sibling actions. Lower groups run first; equal values may run concurrently."
+        },
+        "Configuration": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "RetryCount": {
+          "type": "integer",
+          "minimum": 0,
+          "default": 0
+        },
+        "WaitForNextAttemptMillis": {
+          "type": "integer",
+          "minimum": 0,
+          "default": 1000
+        },
+        "AttemptTimeoutMillis": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "ShowProgressIfPossible": {
+          "type": "boolean",
+          "default": true
+        },
+        "ArtifactPublicationFinalizationActionAdapter": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "ExecutionFailurePolicy": {
+          "$ref": "#/$defs/BuildExecutionFailurePolicy"
+        }
+      },
+      "required": [
+        "Id"
+      ],
+      "minProperties": 1
+    },
+    "VersionScopePublicationFinalizationAction": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Id": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "ExecutionEnabled": {
+          "type": "boolean",
+          "default": true
+        },
+        "ExecutionOrder": {
+          "type": "integer",
+          "default": 0,
+          "description": "Local order among sibling actions. Lower groups run first; equal values may run concurrently."
+        },
+        "Configuration": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "RetryCount": {
+          "type": "integer",
+          "minimum": 0,
+          "default": 0
+        },
+        "WaitForNextAttemptMillis": {
+          "type": "integer",
+          "minimum": 0,
+          "default": 1000
+        },
+        "AttemptTimeoutMillis": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "ShowProgressIfPossible": {
+          "type": "boolean",
+          "default": true
+        },
+        "VersionScopePublicationFinalizationActionAdapter": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "ExecutionFailurePolicy": {
+          "$ref": "#/$defs/BuildExecutionFailurePolicy"
+        }
+      },
+      "required": [
+        "Id"
+      ],
+      "minProperties": 1
+    },
+    "ArtifactPublicationFinalizationActions": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Snapshot": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ArtifactPublicationFinalizationAction"
+          }
+        },
+        "Release": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ArtifactPublicationFinalizationAction"
+          }
+        }
+      },
+      "minProperties": 1
+    },
+    "VersionScopePublicationFinalizationActions": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Snapshot": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/VersionScopePublicationFinalizationAction"
+          }
+        },
+        "Release": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/VersionScopePublicationFinalizationAction"
+          }
+        }
+      },
+      "minProperties": 1
+    },
+    "Publication": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Id": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "ExecutionEnabled": {
+          "type": "boolean",
+          "default": true
+        },
+        "Classifier": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_.-]*$"
+        },
+        "Extension": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$"
+        },
+        "PublicationFinalizationActions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/PublicationFinalizationAction"
+          }
+        }
+      },
+      "required": [
+        "Id"
+      ]
+    },
+    "PublicationEndpoint": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Id": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "ExecutionEnabled": {
+          "type": "boolean",
+          "default": true
+        },
+        "PublicationUri": {
+          "type": "string",
+          "format": "uri",
+          "minLength": 1
+        },
+        "PublicationAdapter": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "PublicationCredentialProfile": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "ExecutionOrder": {
+          "type": "integer",
+          "default": 0,
+          "description": "Global order among direct root publication endpoint groups. Lower values run first; equal values may run concurrently."
+        },
+        "PublicationRetryCount": {
+          "type": "integer",
+          "minimum": 0,
+          "default": 0
+        },
+        "MaxConcurrentPublications": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Optional positive endpoint limit on concurrent publications. Absent means no endpoint-specific limit; enforcement depends on the adapter and execution mechanism."
+        },
+        "PublicationWaitForNextAttemptMillis": {
+          "type": "integer",
+          "minimum": 0,
+          "default": 1000
+        },
+        "PublicationAttemptTimeoutMillis": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "ShowPublicationProgressIfPossible": {
+          "type": "boolean",
+          "default": true
+        },
+        "Configuration": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "Publications": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Publication"
+          }
+        },
+        "ExecutionFailurePolicy": {
+          "$ref": "#/$defs/BuildExecutionFailurePolicy"
+        }
+      },
+      "required": [
+        "Id"
+      ],
+      "minProperties": 1
+    },
+    "PublicationEndpoints": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/PublicationEndpoint"
+      }
+    },
+    "PublicationStabilityConfiguration": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "PublicationEnabled": {
+          "type": "boolean",
+          "default": false
+        },
+        "PublicationEndpoints": {
+          "$ref": "#/$defs/PublicationEndpoints"
+        },
+        "OutputPublicationFinalizationActions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/OutputPublicationFinalizationAction"
+          }
+        }
+      },
+      "minProperties": 1
+    },
+    "OutputPublicationsDeclaration": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "OutputSelector": {
+          "type": "string",
+          "enum": [
+            "native_product_sources",
+            "native_product_binaries",
+            "native_product_documentation",
+            "native_develop_sources",
+            "native_develop_binaries",
+            "native_develop_documentation",
+            "modustro_docs_site",
+            "modustro_artifact_build_record",
+            "modustro_version_scope_publication_record",
+            "schema_site",
+            "native_outputs",
+            "native_product_outputs",
+            "native_develop_outputs",
+            "native_sources",
+            "native_binaries",
+            "native_documentation"
+          ]
+        },
+        "TechnologyKind": {
+          "type": "string",
+          "enum": [
+            "java",
+            "python",
+            "mps",
+            "modustro"
+          ]
+        },
+        "Snapshot": {
+          "$ref": "#/$defs/PublicationStabilityConfiguration"
+        },
+        "Release": {
+          "$ref": "#/$defs/PublicationStabilityConfiguration"
+        }
+      },
+      "required": [
+        "OutputSelector",
+        "TechnologyKind"
+      ],
+      "minProperties": 2
+    },
+    "OutputPublications": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/OutputPublicationsDeclaration"
+      }
+    }
+  },
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "NestedGradleSettingsBuildPolicy": {
+      "$ref": "#/$defs/NestedGradleSettingsBuildPolicy"
+    },
+    "OutputPublications": {
+      "$ref": "#/$defs/OutputPublications"
+    },
+    "ArtifactPublicationFinalizationActions": {
+      "$ref": "#/$defs/ArtifactPublicationFinalizationActions"
+    },
+    "VersionScopePublicationFinalizationActions": {
+      "$ref": "#/$defs/VersionScopePublicationFinalizationActions"
+    }
+  }
+}

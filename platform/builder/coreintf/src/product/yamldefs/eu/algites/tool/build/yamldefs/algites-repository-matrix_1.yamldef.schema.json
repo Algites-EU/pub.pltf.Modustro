@@ -1,0 +1,119 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/Algites-EU/pub.pltf.Modustro/main/platform/builder/coreintf/src/product/yamldefs/eu/algites/tool/build/yamldefs/algites-repository-matrix_1.yamldef.schema.json",
+  "title": "Algites Repository Matrix v1",
+  "x-algites-document-common-metadata": 1,
+  "$defs": {
+    "repositoryEndpoint": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Id": {
+          "type": "string",
+          "pattern": "^algites-[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "Url": {
+          "type": "string",
+          "format": "uri",
+          "minLength": 1
+        },
+        "CredentialProfile": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "Enabled": {
+          "type": "boolean"
+        },
+        "UsageProviderAdapter": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+        }
+      },
+      "required": [
+        "Id"
+      ],
+      "minProperties": 1
+    },
+    "repositoryEndpointList": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/repositoryEndpoint"
+      }
+    },
+    "usageMatrix": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Download": {
+          "$ref": "#/$defs/repositoryEndpointList"
+        },
+        "Upload": {
+          "$ref": "#/$defs/repositoryEndpointList"
+        },
+        "Manage": {
+          "$ref": "#/$defs/repositoryEndpointList"
+        }
+      },
+      "minProperties": 1
+    },
+    "stabilityMatrix": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Release": {
+          "$ref": "#/$defs/usageMatrix"
+        },
+        "Snapshot": {
+          "$ref": "#/$defs/usageMatrix"
+        }
+      },
+      "minProperties": 1
+    },
+    "visibilityMatrix": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "Public": {
+          "$ref": "#/$defs/stabilityMatrix"
+        },
+        "Private": {
+          "$ref": "#/$defs/stabilityMatrix"
+        }
+      },
+      "minProperties": 1
+    },
+    "DocumentContent": {
+      "type": "object",
+      "properties": {
+        "Java": {
+          "$ref": "#/$defs/visibilityMatrix"
+        },
+        "Python": {
+          "$ref": "#/$defs/visibilityMatrix"
+        },
+        "Mps": {
+          "$ref": "#/$defs/visibilityMatrix"
+        }
+      }
+    },
+    "EmbeddedContent": {
+      "$anchor": "EmbeddedContent",
+      "allOf": [
+        {
+          "$ref": "#/$defs/DocumentContent"
+        }
+      ],
+      "unevaluatedProperties": false
+    }
+  },
+  "allOf": [
+    {
+      "$ref": "https://defs.dev.algites.eu/api/yamldefs/eu/algites/pltf/modustro/builder/common/document-common-metadata_1.yamldef.schema.json"
+    },
+    {
+      "$ref": "#/$defs/DocumentContent"
+    }
+  ],
+  "unevaluatedProperties": false
+}

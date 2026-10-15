@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:algites:modustro:builder:jsondef:model:inheritance:1",
+  "x-algites-definition-version": 1,
+  "title": "Modustro Builder Inheritance Model v1",
+  "x-algites-document-common-metadata": 1,
+  "$defs": {
+    "ItemsInheritancePolicy": {
+      "type": "string",
+      "enum": [
+        "merge_missing_items",
+        "remove_missing_items"
+      ],
+      "default": "merge_missing_items"
+    },
+    "StringItemsCollection": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "ItemsInheritancePolicy": {
+          "$ref": "#/$defs/ItemsInheritancePolicy"
+        },
+        "Items": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "required": [
+        "Items"
+      ]
+    },
+    "DocumentContent": {
+      "type": "object",
+      "properties": {
+        "ItemsInheritancePolicy": {
+          "$ref": "#/$defs/ItemsInheritancePolicy"
+        },
+        "Items": {
+          "type": "array"
+        }
+      },
+      "required": [
+        "Items"
+      ]
+    },
+    "EmbeddedContent": {
+      "$anchor": "EmbeddedContent",
+      "allOf": [
+        {
+          "$ref": "#/$defs/DocumentContent"
+        }
+      ],
+      "unevaluatedProperties": false
+    }
+  },
+  "allOf": [
+    {
+      "$ref": "https://defs.dev.algites.eu/api/jsondefs/eu/algites/pltf/modustro/builder/common/document-common-metadata_1.jsondef.schema.json"
+    },
+    {
+      "$ref": "#/$defs/DocumentContent"
+    }
+  ],
+  "unevaluatedProperties": false
+}

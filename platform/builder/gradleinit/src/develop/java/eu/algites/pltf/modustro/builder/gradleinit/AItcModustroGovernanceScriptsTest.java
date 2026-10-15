@@ -1,0 +1,253 @@
+package eu.algites.pltf.modustro.builder.gradleinit;
+
+import com.sun.net.httpserver.HttpServer;
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
+import org.gradle.testkit.runner.GradleRunner;
+import org.gradle.testkit.runner.UnexpectedBuildFailure;
+import org.testng.Assert;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
+
+/** Tests publication bridge initialization in repositories without local governance copies. */
+public final class AItcModustroGovernanceScriptsTest {
+    private static final String OVERRIDES_PATH = "gradle/tool/repository/modustro-publication-overrides.gradle.kts";
+    private static final String OVERRIDES_URL = "https://raw.githubusercontent.com/Algites-EU/pub.gov.Algites/main/" + OVERRIDES_PATH;
+
+    /** Makes TestKit fixtures independent of publication flags set by the calling CI workflow. */
+    private static Map<String, String> AIcFixtureEnvironment(Map<String, String> aEnvironment) {
+        Map<String, String> locEnvironment = new HashMap<>(aEnvironment);
+        locEnvironment.keySet().removeIf(aName ->
+            aName.startsWith("MODUSTRO_PUBLICATION_") ||
+            aName.equals("MODUSTRO_PUBLISHING_INTENT") ||
+            aName.equals("MODUSTRO_OPERATION_INTENT"));
+        return locEnvironment;
+    }
+
+    /** Creates a real GradleRunner without inheriting publication invocation overrides. */
+    private static GradleRunner AIcFixtureRunner(Path aProjectDirectory) {
+        return GradleRunner.create()
+            .withProjectDir(aProjectDirectory.toFile())
+            .withEnvironment(AIcFixtureEnvironment(System.getenv()));
+    }
+
+    /** A snapshot publishing workflow must not change the expected behavior of isolated fixtures. */
+    @Test
+    public void AIcDoesNotInheritPublishingWorkflowOverrides() {
+        Map<String, String> locEnvironment = Map.of(
+            "MODUSTRO_PUBLICATION_SCHEMA_SITE", "FORCE_OFF",
+            "MODUSTRO_PUBLICATION_MODUSTRO_DOCS_SITE", "FORCE_OFF",
+            "MODUSTRO_PUBLICATION_NATIVE_PRODUCT_BINARIES", "FORCE_ON",
+            "MODUSTRO_PUBLISHING_INTENT", "true",
+            "MODUSTRO_OPERATION_INTENT", "publish",
+            "JAVA_HOME", "/fixture/java");
+        Assert.assertEquals(AIcFixtureEnvironment(locEnvironment), Map.of("JAVA_HOME", "/fixture/java"));
+    }
+
+    /** Supplies both publication entry points and both local and downloaded initialization paths. */
+    @DataProvider(name = "entryPoints")
+    public Object[][] AIcEntryPoints() {
+        return new Object[][] {{false, false}, {false, true}, {true, false}, {true, true}};
+    }
+
+    /** Verifies real Gradle script initialization, ancestor discovery and invocation overrides. */
+    @Test(dataProvider = "entryPoints")
+    public void AIcInitializesPublicationOverrides(boolean aRootBuild, boolean aLocalCopy) throws IOException {
+        Path locRepository = Path.of(System.getProperty("user.dir")).toAbsolutePath();
+        while (locRepository != null && !Files.isRegularFile(locRepository.resolve("modustro-source-repository.yml"))) {
+            locRepository = locRepository.getParent();
+        }
+        if (locRepository == null) throw new IOException("Cannot locate governance repository sources.");
+        String locOverrides = Files.readString(locRepository.resolve(OVERRIDES_PATH));
+        String locEntry = Files.readString(locRepository.resolve(aRootBuild
+            ? "gradle/tool/repository/modustro-root-build.gradle.kts"
+            : "gradle/tool/publication/modustro-publication.gradle.kts"));
+        if (aRootBuild) {
+            locEntry = locEntry.substring(locEntry.indexOf("/* Publishing invocation overrides must be available"),
+                locEntry.indexOf("val locAlgitesRequiredCredentialsPlan = run"));
+        }
+        AtomicInteger locDownloads = new AtomicInteger();
+        HttpServer locServer = HttpServer.create(new InetSocketAddress("127.0.0.1", 0), 0);
+        locServer.createContext("/overrides.gradle.kts", aExchange -> {
+            locDownloads.incrementAndGet();
+            byte[] locBytes = locOverrides.getBytes(StandardCharsets.UTF_8);
+            aExchange.sendResponseHeaders(200, locBytes.length);
+            try (var locResponse = aExchange.getResponseBody()) { locResponse.write(locBytes); }
+            aExchange.close();
+        });
+        locServer.start();
+        try {
+            Path locFixture = Files.createTempDirectory("modustro-governance-fallback-");
+            Files.writeString(locFixture.resolve("modustro-source-repository.yml"), "SourceRepository:\n  Id: pub.test.fallback\n");
+            if (aLocalCopy) {
+                Path locLocal = locFixture.resolve(OVERRIDES_PATH);
+                Files.createDirectories(locLocal.getParent());
+                Files.writeString(locLocal, locOverrides);
+            }
+            Path locBuild = Files.createDirectories(locFixture.resolve("nested"));
+            Files.writeString(locBuild.resolve("settings.gradle.kts"), "rootProject.name = \"fallback-test\"\n");
+            locEntry = locEntry.replace("${System.getenv(\"MODUSTRO_PUBLIC_GOVERNANCE_REVISION\") ?: \"main\"}", "main");
+            String locTestUrl = "http://127.0.0.1:" + locServer.getAddress().getPort() + "/overrides.gradle.kts";
+            Files.writeString(locBuild.resolve("bridge.gradle.kts"), locEntry.replace(OVERRIDES_URL, locTestUrl));
+            String locBuildScript = """
+                extra["modustroResolvedArtifactDirectoryMetadata"] = emptyList<Map<String, Any?>>()
+                apply(from = "bridge.gradle.kts")
+                apply(from = "bridge.gradle.kts")
+                @Suppress("UNCHECKED_CAST")
+                val locResolve = extra["modustroEffectivePublicationPlan"] as (Map<String, Any?>, String, String) -> Map<String, Any?>
+                val locMetadata = mapOf<String, Any?>("publicationTechnologyKind" to "java", "outputPublications" to mapOf(
+                    "java.native_product_binaries" to mapOf("snapshot" to mapOf("publicationEnabled" to true))
+                ))
+                val locForcedOff = locResolve(locMetadata, "native_product_binaries", "snapshot")
+                check(locForcedOff["publicationEnabled"] == false) {
+                    "FORCE_OFF must disable native_product_binaries/snapshot: $locForcedOff"
+                }
+                println("PUBLICATION_FALLBACK_OK")
+                """;
+            if (!aRootBuild) locBuildScript += """
+                @Suppress("UNCHECKED_CAST")
+                val locRepositoryResolver = extra["modustroResolvePublicationPlan"] as (Map<String, Any?>, String, String, List<String>) -> Map<String, Any?>
+                val locRepositoryMetadata = mapOf<String, Any?>("outputPublications" to listOf("modustro_docs_site", "schema_site").associate {
+                    "modustro.$it" to mapOf("snapshot" to mapOf("publicationEnabled" to true,
+                        "outputPublicationFinalizationActions" to listOf(mapOf("Id" to "retained-action"))))
+                })
+                listOf("modustro_docs_site", "schema_site").forEach {
+                    val locPlan = locRepositoryResolver(locRepositoryMetadata, it, "snapshot", emptyList())
+                    check(locPlan["publicationEnabled"] == true) {
+                        "Publication bridge unexpectedly disabled $it/snapshot: $locPlan"
+                    }
+                    check((locPlan["outputPublicationFinalizationActions"] as List<*>).size == 1) {
+                        "Publication bridge lost output finalization actions for $it/snapshot: $locPlan"
+                    }
+                    check(locPlan.containsKey("snapshotPublicationEndpoints")) {
+                        "Publication bridge omitted snapshot endpoint registry for $it: $locPlan"
+                    }
+                }
+                """;
+            Files.writeString(locBuild.resolve("build.gradle.kts"), locBuildScript);
+            org.gradle.testkit.runner.BuildResult locResult;
+            try {
+                locResult = AIcFixtureRunner(locBuild)
+                    .withArguments("printModustroPublicationOverrides", "-Pmodustro.publication.nativeProductBinaries=FORCE_OFF",
+                        "--stacktrace").build();
+            } catch (UnexpectedBuildFailure locFailure) {
+                /* Gradle's console summary hides TestKit's nested failure output; print it at the test boundary. */
+                String locDiagnostic = "Publication bridge fixture failed (root=" + aRootBuild +
+                    ", local=" + aLocalCopy + ", root=" + locRepository +
+                    ", entry=" + (aRootBuild ? "modustro-root-build.gradle.kts" : "modustro-publication.gradle.kts") +
+                    ", fixture=" + locFixture + "):\n" + locFailure.getBuildResult().getOutput();
+                System.err.println(locDiagnostic);
+                throw new AssertionError(locDiagnostic, locFailure);
+            }
+            Assert.assertTrue(locResult.getOutput().contains("PUBLICATION_FALLBACK_OK"), locResult.getOutput());
+            Assert.assertEquals(locDownloads.get(), aLocalCopy ? 0 : 1, locResult.getOutput());
+        } finally {
+            locServer.stop(0);
+        }
+    }
+
+    /** Covers local phase overrides and repositories relying entirely on shared governance. */
+    @DataProvider(name = "phaseScripts")
+    public Object[][] AIcPhaseScripts() {
+        return new Object[][] {{false}, {true}};
+    }
+
+    /** Initializes all six phases from the real root bridge and verifies the prepare task graph. */
+    @Test(dataProvider = "phaseScripts")
+    public void AIcInitializesPhaseScript(boolean aLocalCopy) throws IOException {
+        Path locRepository = Path.of(System.getProperty("user.dir")).toAbsolutePath();
+        while (locRepository != null && !Files.isRegularFile(locRepository.resolve("modustro-source-repository.yml"))) {
+            locRepository = locRepository.getParent();
+        }
+        if (locRepository == null) throw new IOException("Cannot locate governance repository sources.");
+        String locRelative = "gradle/tool/repository/modustro-build-phase-tasks.gradle.kts";
+        String locPhaseScript = Files.readString(locRepository.resolve(locRelative));
+        String locRoot = Files.readString(locRepository.resolve("gradle/tool/repository/modustro-root-build.gradle.kts"));
+        String locBridge = locRoot.substring(locRoot.indexOf("/* Modustro Builder 5.2 phase and publishing invocation adapters. */"));
+        AtomicInteger locDownloads = new AtomicInteger();
+        HttpServer locServer = HttpServer.create(new InetSocketAddress("127.0.0.1", 0), 0);
+        locServer.createContext("/modustro-build-phase-tasks.gradle.kts", aExchange -> {
+            byte[] locBytes = locPhaseScript.getBytes(StandardCharsets.UTF_8);
+            aExchange.getResponseHeaders().set("ETag", "\"phase-script-v1\"");
+            aExchange.getResponseHeaders().set("Last-Modified", "Fri, 02 Oct 2026 00:00:00 GMT");
+            aExchange.getResponseHeaders().set("Content-Length", Integer.toString(locBytes.length));
+            if (aExchange.getRequestMethod().equals("HEAD")) {
+                aExchange.sendResponseHeaders(200, -1);
+            } else {
+                locDownloads.incrementAndGet();
+                aExchange.sendResponseHeaders(200, locBytes.length);
+                try (var locResponse = aExchange.getResponseBody()) { locResponse.write(locBytes); }
+            }
+            aExchange.close();
+        });
+        locServer.start();
+        try {
+            Path locFixture = Files.createTempDirectory("modustro-phase-fallback-");
+            Files.writeString(locFixture.resolve("modustro-source-repository.yml"), "SourceRepository:\n  Id: pub.test.phases\n");
+            if (aLocalCopy) {
+                Path locLocal = locFixture.resolve(locRelative);
+                Files.createDirectories(locLocal.getParent());
+                Files.writeString(locLocal, locPhaseScript);
+            }
+            Path locBuild = Files.createDirectories(locFixture.resolve("nested"));
+            Files.writeString(locBuild.resolve("settings.gradle.kts"), "rootProject.name = \"phase-test\"\n");
+            String locRemotePrefix = "https://raw.githubusercontent.com/Algites-EU/pub.gov.Algites/main/gradle/tool/repository/";
+            String locTestPrefix = "http://127.0.0.1:" + locServer.getAddress().getPort() + "/";
+            Files.writeString(locBuild.resolve("bridge.gradle.kts"), locBridge.replace("${System.getenv(\"MODUSTRO_PUBLIC_GOVERNANCE_REVISION\") ?: \"main\"}", "main").replace(locRemotePrefix, locTestPrefix));
+            Files.writeString(locBuild.resolve("build.gradle.kts"), """
+                tasks.register("modustroDependencyPreflight")
+                tasks.register("validateModustroPublicationProfiles") {
+                    doLast { println("FIXTURE_PUBLICATION_PREFLIGHT_OK") }
+                }
+                tasks.register("assemble") {
+                    doLast { println("FIXTURE_PACKAGED_OK") }
+                }
+                tasks.register("modustroPublish") {
+                    doLast { println("FIXTURE_PUBLISHED_OK") }
+                }
+                tasks.register("processModustroJavaNativeSources") {
+                    doLast { println("REMOTE_PHASE_PREPARED") }
+                }
+                tasks.register("unrelated") { error("Unrelated task was realized") }
+                apply(from = "bridge.gradle.kts")
+                val locPhases = listOf("Resolve", "Prepare", "Compile", "Verify", "Package", "Publish")
+                check(locPhases.all { "modustro${it}Phase" in tasks.names })
+                """);
+            var locRunner = AIcFixtureRunner(locBuild)
+                .withArguments("modustroPreparePhase", "--configuration-cache", "--stacktrace");
+            String locPrepareOutput = locRunner.build().getOutput();
+            Assert.assertTrue(locPrepareOutput.contains("REMOTE_PHASE_PREPARED"), locPrepareOutput);
+            Assert.assertFalse(locPrepareOutput.contains("FIXTURE_PUBLICATION_PREFLIGHT_OK"), locPrepareOutput);
+            int locDownloadsAfterFirst = locDownloads.get();
+            Assert.assertEquals(locDownloadsAfterFirst, aLocalCopy ? 0 : 1);
+            String locSecondOutput = locRunner.build().getOutput();
+            Assert.assertTrue(locSecondOutput.contains("Reusing configuration cache"), locSecondOutput);
+            Assert.assertFalse(locSecondOutput.contains("FIXTURE_PUBLICATION_PREFLIGHT_OK"), locSecondOutput);
+            Assert.assertEquals(locDownloads.get(), locDownloadsAfterFirst);
+
+            String locPackageOutput = AIcFixtureRunner(locBuild)
+                .withArguments("modustroPackagePhase", "--configuration-cache", "--stacktrace")
+                .build().getOutput();
+            Assert.assertTrue(locPackageOutput.contains("FIXTURE_PACKAGED_OK"), locPackageOutput);
+            Assert.assertFalse(locPackageOutput.contains("FIXTURE_PUBLICATION_PREFLIGHT_OK"), locPackageOutput);
+
+            String locPublishOutput = AIcFixtureRunner(locBuild)
+                .withArguments("modustroPublish", "--configuration-cache", "--stacktrace")
+                .build().getOutput();
+            int locPreflight = locPublishOutput.indexOf("FIXTURE_PUBLICATION_PREFLIGHT_OK");
+            int locPackaged = locPublishOutput.indexOf("FIXTURE_PACKAGED_OK");
+            int locPublished = locPublishOutput.indexOf("FIXTURE_PUBLISHED_OK");
+            Assert.assertTrue(locPreflight >= 0 && locPackaged >= 0 && locPublished > locPreflight &&
+                locPublished > locPackaged, locPublishOutput);
+        } finally {
+            locServer.stop(0);
+        }
+    }
+
+}

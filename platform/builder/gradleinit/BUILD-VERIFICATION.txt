@@ -1,0 +1,27 @@
+Modustro generator and Gradleinit verification (2026-10-04)
+Gradle 9.2.1, JDK 17, Python 3.12.
+
+147 Java tests passed across the three repositories: pub.lib.General 97,
+pub.tool.General 3, pub.gov.Algites 47. No failures, errors or skipped tests.
+4 Python tests passed, including canonical YAML/JSON representation regressions.
+The generator regression compiles generated Java and executes generated Python.
+The original common-metadata schemas remain as fixtures under src/develop/yamldefs
+and src/develop/jsondefs; documentation and canonical origins are retained.
+
+The standalone generator bootstrap test and publishToMavenLocal succeeded.
+The standalone Gradleinit bootstrap passed its 4 TestKit tests, validatePlugins,
+and publishToMavenLocal. These tests cover class identity, descriptor-only project
+discovery, isolated metadata resolution, and local-copy publishing with payload
+renaming and configuration-cache reuse. No remote artifacts were published.
+
+Resolve, prepare, compile, verify and package phases were executed successfully
+locally across the repositories. Publishing task graph dry-run and configuration
+cache reuse succeeded. Java dependency preflight excludes local project artifacts
+so the resolve phase does not implicitly compile or package project dependencies.
+A final repeated Python preflight was blocked by Cloudsmith HTTP 403; final
+verification uses locally built wheels instead of that external Python index.
+This is local verification, not a successful run of remote GitHub Actions.
+
+Activation order: bootstrap/publish the updated Defs Codegen first; then bootstrap/
+publish the updated Gradleinit artifact; then use the updated governance scripts
+and repository Settings. Instructions and coordinates are in the respective READMEs.

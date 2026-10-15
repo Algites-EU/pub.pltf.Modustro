@@ -1,4 +1,4 @@
-﻿# Modustro DSL Concept – Version 1.2
+﻿# Modustro Modeler DSL Concept – Version 1.2
 
 ## 1. Introduction
 Modustro introduces a comprehensive ecosystem of interconnected domain-specific languages (DSLs) designed to model data, schemas, behavior, constraints, and generator profiles in a unified, extensible way.  

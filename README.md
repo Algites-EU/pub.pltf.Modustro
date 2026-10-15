@@ -1,3 +1,11 @@
+# Modustro — Public Platform Repository
+
+Repository architecture: `common/cfr` shared specification, `modeler` domain-specific specifications, `operator` profile; Builder will be copied later from the verified governance baseline. Legacy DSL documents are under `platform/modeler/specs/`; `platform/specs/Modustro-Roadmap.md` remains cross-product.
+
+**The original repository README follows for historical reference.**
+
+---
+
 [[UNCONFIRMED]]
 
 # Modustro Platform
@@ -326,3 +334,18 @@ https://github.com/Algites-EU/pub.gov.Algites.specs/blob/main/ci/Algites-Github-
 ---
 
 [[/UNCONFIRMED]]
+
+### Endpoint concurrency configuration (design-stage support)
+
+Publication endpoints may declare `MaxConcurrentPublications` and input subscription
+endpoints may declare `MaxConcurrentSubscriptions`. Each is an optional positive
+integer; absence means no endpoint-specific limit. The values participate in
+normal endpoint inheritance and overrides and are retained in the effective
+metadata and Java endpoint models.
+
+These fields are configuration contracts for the planned Action Execution resource
+scheduler. The current legacy publication scheduler does **not** yet enforce the
+publication limit. Native Gradle Maven dependency resolution does **not** enforce
+the subscription limit. Deployments that require hard limits must use a scheduler
+or subscription adapter that actually supports them; declaration alone is not a
+guarantee of throttling.

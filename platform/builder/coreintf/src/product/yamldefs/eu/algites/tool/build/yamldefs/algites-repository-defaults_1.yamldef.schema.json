@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/Algites-EU/pub.pltf.Modustro/main/platform/builder/coreintf/src/product/yamldefs/eu/algites/tool/build/yamldefs/algites-repository-defaults_1.yamldef.schema.json",
+  "title": "Algites Repository Defaults Overlay v1",
+  "x-algites-document-common-metadata": 1,
+  "$defs": {
+    "DocumentContent": {
+      "type": "object",
+      "properties": {
+        "CredentialProfiles": {
+          "$ref": "algites-credential-profiles_1.yamldef.schema.json#EmbeddedContent"
+        },
+        "OutputPublications": {
+          "$ref": "modustro-builder-publications_1.yamldef.schema.json#/$defs/OutputPublications"
+        },
+        "InputSubscriptions": {
+          "$ref": "algites-input-subscriptions_1.yamldef.schema.json#/$defs/InputSubscriptions"
+        },
+        "ArtifactPublicationFinalizationActions": {
+          "$ref": "modustro-builder-publications_1.yamldef.schema.json#/$defs/ArtifactPublicationFinalizationActions"
+        },
+        "VersionScopePublicationFinalizationActions": {
+          "$ref": "modustro-builder-publications_1.yamldef.schema.json#/$defs/VersionScopePublicationFinalizationActions"
+        }
+      }
+    },
+    "EmbeddedContent": {
+      "$anchor": "EmbeddedContent",
+      "allOf": [
+        {
+          "$ref": "#/$defs/DocumentContent"
+        }
+      ],
+      "unevaluatedProperties": false
+    }
+  },
+  "allOf": [
+    {
+      "$ref": "https://defs.dev.algites.eu/api/yamldefs/eu/algites/pltf/modustro/builder/common/document-common-metadata_1.yamldef.schema.json"
+    },
+    {
+      "$ref": "#/$defs/DocumentContent"
+    }
+  ],
+  "unevaluatedProperties": false
+}

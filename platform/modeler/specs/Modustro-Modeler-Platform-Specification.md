@@ -1,4 +1,6 @@
-# Modustro Platform Specification
+# Modustro Modeler — Platform Specification
+
+> **Scope note (2026-10):** This historical specification is now maintained under Modustro Modeler. It retains passages on platform-wide concepts and Studio for traceability. Those passages are not automatically reclassified as Modeler-only contracts. Shared CFR belongs to `common/cfr` and Operator behavior to `operator/`.
 
 ## Preamble – The Spirit of Modustro
 
