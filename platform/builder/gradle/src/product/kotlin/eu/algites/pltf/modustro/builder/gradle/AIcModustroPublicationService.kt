@@ -391,7 +391,7 @@ abstract class AIcModustroPublicationService : BuildService<AIcModustroPublicati
         }
         val locTools = mutableListOf<Map<String, Any>>()
         val locClasses = mutableListOf(AIcModustroSettingsPlugin::class.java, AIcPublicationPlanner::class.java)
-        try { locClasses.add(Class.forName("eu.algites.tool.codegen.defs.AIcDefaultDefsCodegenService")) } catch (failure: ClassNotFoundException) { }
+        try { locClasses.add(Class.forName("eu.algites.tool.codegen.defs.impl.standard.AIcDefaultDefsCodegenService")) } catch (failure: ClassNotFoundException) { }
         locClasses.forEach { type ->
             type.protectionDomain?.codeSource?.location?.takeIf { it.protocol == "file" }?.let { url ->
                 val file = java.io.File(url.toURI())

@@ -28,6 +28,10 @@ internal fun AIcDiscover(aSettings: Settings, aRuntime: AIcModustroGradleRuntime
     val locAlgitesResolveCredentialValue = aRuntime.credentials.locAlgitesResolveCredentialValue
     val locAlgitesCredentialPreflight = System.getenv("_TMP_ALGITES_CREDENTIAL_PREFLIGHT")
         ?.equals("true", ignoreCase = true) == true
+    val locDependencyMode = providers.gradleProperty("modustro.dependencyMode")
+        .orElse(providers.environmentVariable("MODUSTRO_DEPENDENCY_MODE"))
+        .orElse(providers.environmentVariable("MODUSTRO_BOOTSTRAP_DEPENDENCY_MODE"))
+        .orElse("remote").get()
     val locAlgitesResolveMetadataMap = aRuntime.resolveMap
 
     val locAlgitesRawMetadata = locAlgitesResolveMetadataMap(
@@ -148,6 +152,10 @@ internal fun AIcDiscover(aSettings: Settings, aRuntime: AIcModustroGradleRuntime
                 ?: error("Enabled Java input subscription has no id.")
             val locUri = locMap["subscriptionUri"]?.toString()?.trim()?.takeIf { it.isNotBlank() }
                 ?: error("Enabled Java input subscription '$locId' has no SubscriptionUri.")
+            /* Local resolution must not silently fall back to a Cloudsmith Algites snapshot.
+             * Maven Central remains available for independent third-party releases. */
+            if (locDependencyMode in setOf("local", "source", "offline") &&
+                    locUri.contains("cloudsmith.io", ignoreCase = true)) return@subscriptionLoop
             val locStability = locMap["stability"]?.toString()?.trim()?.lowercase()?.takeIf { it in setOf("snapshot", "release") }
                 ?: error("Enabled Java input subscription '$locId' has no valid Stability.")
             val locOrder = (locMap["subscriptionOrder"] as? Number)?.toInt()

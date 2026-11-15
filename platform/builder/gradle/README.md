@@ -1,7 +1,7 @@
 # Modustro Builder Gradle integration
 
-`gradle` is the compiled Gradle integration edge (the former `gradleinit` artifact). Builder `coreintf` and
-`coreimpl` remain independent of Gradle. The existing metadata orchestration is
+`gradle` is the compiled Gradle integration edge (the former `gradleinit` artifact). Builder `core/intf` and
+`core/impl` remain independent of Gradle. The existing metadata orchestration is
 compiled here instead of being evaluated as Settings/Project script plugins;
 Input-subscription and output-publication normalization still delegates portable semantics to Core.
 
@@ -77,7 +77,7 @@ the repository Settings and does not apply repository conventions to itself.
 Use JDK 17 and the repository's Gradle 9.2.1 wrapper:
 
 ```bash
-bash platform/builder/builder-bootstrap.sh \
+bash devops/bootstrap/bootstrap.sh \
   :gradle:assemble :gradle:test :gradle:validatePlugins \
   :gradle:generatePomFileForMavenJavaPublication
 ```
@@ -91,7 +91,7 @@ For a Maven upload using this bootstrap build:
 ```bash
 export MODUSTRO_GRADLE_BOOTSTRAP_USERNAME='<repository username>'
 export MODUSTRO_GRADLE_BOOTSTRAP_PASSWORD='<repository password>'
-bash platform/builder/builder-bootstrap.sh \
+bash devops/bootstrap/bootstrap.sh \
   :gradle:publishMavenJavaPublicationToBootstrapRepository \
   -Pmodustro.gradle.bootstrapRepositoryUrl='<Maven upload URL>'
 ```

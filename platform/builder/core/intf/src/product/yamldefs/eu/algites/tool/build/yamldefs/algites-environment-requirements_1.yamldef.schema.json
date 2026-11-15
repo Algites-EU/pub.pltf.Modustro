@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://defs.dev.algites.eu/api/yamldefs/eu/algites/tool/build/yamldefs/algites-environment-requirements_1.yamldef.schema.json",
+  "title": "Algites Environment Requirements v1",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "Java": {
+      "$ref": "algites-version-requirement_1.yamldef.schema.json"
+    },
+    "Python": {
+      "$ref": "algites-version-requirement_1.yamldef.schema.json"
+    },
+    "Mps": {
+      "$ref": "algites-version-requirement_1.yamldef.schema.json"
+    }
+  },
+  "minProperties": 1
+}

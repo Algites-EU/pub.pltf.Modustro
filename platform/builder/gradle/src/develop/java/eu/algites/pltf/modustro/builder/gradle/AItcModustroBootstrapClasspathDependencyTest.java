@@ -14,7 +14,7 @@ public final class AItcModustroBootstrapClasspathDependencyTest {
         while (locRepository != null && !Files.isRegularFile(locRepository.resolve("modustro-source-repository.yml"))) {
             locRepository = locRepository.getParent();
         }
-        if (locRepository == null) throw new IOException("Cannot locate governance repository sources.");
+        if (locRepository == null) throw new IOException("Cannot locate Modustro source repository.");
         return locRepository;
     }
 
@@ -22,13 +22,13 @@ public final class AItcModustroBootstrapClasspathDependencyTest {
     @Test
     public void AIcDeclaresDirectCoreInterfacesDependency() throws IOException {
         Path locRepository = AIcRepository();
-        Path locGradle integration = locRepository.resolve("devops/build/modustro/builder/gradle");
-        String locDescriptor = Files.readString(locGradle integration.resolve("modustro-artifact.yml"));
-        String locStandalone = Files.readString(locGradle integration.resolve("build.gradle.kts"));
-        String locRuntime = Files.readString(locGradle integration.resolve(
+        Path locGradleIntegration = locRepository.resolve("platform/builder/gradle");
+        String locDescriptor = Files.readString(locGradleIntegration.resolve("modustro-artifact.yml"));
+        String locStandalone = Files.readString(locGradleIntegration.resolve("build.gradle.kts"));
+        String locRuntime = Files.readString(locGradleIntegration.resolve(
                 "src/product/kotlin/eu/algites/pltf/modustro/builder/gradle/AIcModustroGradleRuntime.kt"));
         String locGroup = "eu.algites.pltf.modustro.builder";
-        String locArtifact = "pub.gov.Algites_devops.build.modustro.builder.coreintf";
+        String locArtifact = "pub.pltf.Modustro_platform.builder.core.intf";
         String locVersion = "1.0-SNAPSHOT";
         String locCoordinates = locGroup + ":" + locArtifact + ":" + locVersion;
 
@@ -40,9 +40,10 @@ public final class AItcModustroBootstrapClasspathDependencyTest {
                 "\\s*\\R\\s*Usages: \\[product_api\\]" +
                 "\\s*\\R\\s*VersionRequirement:\\s*\\R\\s*Exact: \"" + locVersion + "\"");
         Assert.assertTrue(locCanonicalDependency.matcher(locDescriptor).find(),
-                "The canonical Modustro descriptor must declare coreintf as product_api.");
-        Assert.assertTrue(locStandalone.contains("api(\"" + locCoordinates + "\")"),
-                "The standalone gradle build must publish coreintf as an API dependency.");
+                "The canonical Modustro descriptor must declare the local Builder core/intf as product_api.");
+        Assert.assertTrue(locStandalone.contains("api(project(\":platform:builder:core:intf\"))")
+                && locStandalone.contains("api(\"" + locCoordinates + "\")"),
+                "The standalone Gradle build must expose Builder core/intf as an API dependency.");
         Assert.assertTrue(locStandalone.contains("from(components[\"java\"])"),
                 "The standalone Maven publication must expose the Java component dependency metadata.");
     }
