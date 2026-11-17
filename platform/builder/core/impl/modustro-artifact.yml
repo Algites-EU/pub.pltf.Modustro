@@ -13,8 +13,6 @@ Dependencies:
       - GroupId: eu.algites.pltf.modustro.builder
         ArtifactId: pub.pltf.Modustro_platform.builder.core.intf
         Usages: [product_api]
-        VersionRequirement:
-          Exact: "1.0-SNAPSHOT"
       - GroupId: eu.algites.lib.common
         ArtifactId: pub.lib.General_version.common.impl
         Usages: [product_implementation]

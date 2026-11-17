@@ -1,9 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
-locRepo="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/../.." && pwd -P)"
-locBootstrap="$locRepo/devops/bootstrap"
-export MODUSTRO_BOOTSTRAP_REPOSITORY="$locRepo"
-export MODUSTRO_BOOTSTRAP_ROOT="$locRepo/platform/builder/core/intf"
-"${ALGITES_PYTHON_EXECUTABLE:-python3}" "$locBootstrap/clean_generated.py" clean \
-    --repository "$locRepo" --root "$MODUSTRO_BOOTSTRAP_ROOT"
-exec bash "$locBootstrap/generate.sh" "$@"
+# Legacy alias. Generation, dependency staging and Java SDO are orchestrated
+# together by the canonical bootstrap; never call generate.sh directly.
+locRepository="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/../.." && pwd -P)"
+exec bash "$locRepository/devops/bootstrap/bootstrap.sh" \
+    --root platform/builder/core/intf --prepare-only "$@"

@@ -59,13 +59,17 @@ public final class AItcBuilderCoreLayoutTest {
         Assert.assertFalse(locImplementationDescriptor.contains("pub.lib.General_version.core"));
         Assert.assertTrue(locImplementationDescriptor.contains("Exact: \"1.1-SNAPSHOT\""));
         Assert.assertTrue(locImplementationDescriptor.contains("jackson-dataformat-xml"));
-        String locBootstrap = Files.readString(locBuilder.resolve("builder-bootstrap.sh"));
-        Assert.assertTrue(locBootstrap.contains("pub.lib.General_version.common.impl:1.1-SNAPSHOT"));
-        Assert.assertTrue(locBootstrap.contains("pub.lib.General_naming.convention.profile.algites:1.1-SNAPSHOT"));
-        Assert.assertTrue(locBootstrap.contains("pub.tool.General_generators.code.defscodegen.impl:1.1-SNAPSHOT"));
-        Assert.assertTrue(locBootstrap.contains("pub.tool.General_generators.code.sdocodegen.impl:1.1-SNAPSHOT"));
-        Assert.assertFalse(locBootstrap.contains("pub.lib.General_version.core:"));
-        Assert.assertFalse(locBootstrap.contains("pub.tool.General_generators.code.defscodegen.coreimpl:"));
-        Assert.assertFalse(locBootstrap.contains("pub.lib.General_naming.convention.coreimpl:"));
+        String locBootstrap = Files.readString(AIcSourceRoot().resolve("devops/bootstrap/build.sh"));
+        String locRuntimeDescriptor = Files.readString(
+                locBuilder.resolve("runtime/modustro-artifact.yml"));
+        Assert.assertTrue(locBootstrap.contains("prepare.py"));
+        Assert.assertTrue(locBootstrap.contains("bootstrapSdoJava"));
+        Assert.assertTrue(Files.isRegularFile(locBuilder.resolve("runtime/modustro-artifact.yml")));
+        Assert.assertTrue(locRuntimeDescriptor.contains("pub.lib.General_version.common.impl"));
+        Assert.assertTrue(locRuntimeDescriptor.contains("pub.lib.General_naming.convention.profile.algites"));
+        Assert.assertTrue(locRuntimeDescriptor.contains("pub.tool.General_generators.code.defscodegen.impl"));
+        Assert.assertTrue(locRuntimeDescriptor.contains("pub.tool.General_generators.code.sdocodegen.impl"));
+        Assert.assertTrue(locRuntimeDescriptor.contains("pub.pltf.Modustro_platform.builder.core.impl"));
+        Assert.assertFalse(locRuntimeDescriptor.contains("pub.gov.Algites_devops.build.modustrobuild"));
     }
 }

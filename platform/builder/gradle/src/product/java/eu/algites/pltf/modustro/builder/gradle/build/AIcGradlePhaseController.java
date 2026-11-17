@@ -1,6 +1,4 @@
-package eu.algites.pltf.modustro.builder.build;
-
-import eu.algites.pltf.modustro.builder.model.build.AInGradleBuildPhase;
+package eu.algites.pltf.modustro.builder.gradle.build;
 
 import java.io.IOException;
 import java.nio.file.Path;

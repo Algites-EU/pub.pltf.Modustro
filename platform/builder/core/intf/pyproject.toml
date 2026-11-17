@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "eu-algites-pub-pltf-modustro-platform-builder-core-intf"
-version = "1.0.dev20261011142722325"
+version = "1.1.dev20261116175254810"
 description = "Gradle-independent public contracts, model types, and canonical definitions for Modustro Builder."
 license = "Apache-2.0"
 license-files = ["LICENSES/Apache-2.0.txt"]

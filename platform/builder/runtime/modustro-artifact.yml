@@ -1,0 +1,102 @@
+# yaml-language-server: $schema=https://defs.dev.algites.eu/api/yamldefs/eu/algites/tool/build/yamldefs/modustro-artifact_1.yamldef.schema.json
+# $schema: https://defs.dev.algites.eu/api/yamldefs/eu/algites/tool/build/yamldefs/modustro-artifact_1.yamldef.schema.json
+$schema: https://defs.dev.algites.eu/api/yamldefs/eu/algites/tool/build/yamldefs/modustro-artifact_1.yamldef.schema.json
+
+Artifact:
+  TechnologyKinds: [java]
+  Name: Modustro Builder runtime dependency bundle
+  Description: Source-free API dependency bundle for the Modustro Gradle Settings and applied Project scripts.
+
+Dependencies:
+  - DependencyKind: modustro
+    Items:
+      - GroupId: eu.algites.pltf.modustro.builder
+        ArtifactId: pub.pltf.Modustro_platform.builder.core.impl
+        Usages: [product_api]
+        VersionRequirement:
+          Exact: "1.1-SNAPSHOT"
+      - GroupId: eu.algites.tool.codegen
+        ArtifactId: pub.tool.General_generators.code.defscodegen.impl
+        Usages: [product_api]
+        VersionRequirement:
+          Exact: "1.1-SNAPSHOT"
+      - GroupId: eu.algites.tool.codegen
+        ArtifactId: pub.tool.General_generators.code.sdocodegen.impl
+        Usages: [product_api]
+        VersionRequirement:
+          Exact: "1.1-SNAPSHOT"
+      - GroupId: eu.algites.tool.codegen
+        ArtifactId: pub.tool.General_generators.code.profile.algites
+        Usages: [product_api]
+        VersionRequirement:
+          Exact: "1.1-SNAPSHOT"
+      - GroupId: eu.algites.lib.naming
+        ArtifactId: pub.lib.General_naming.convention.impl
+        Usages: [product_api]
+        VersionRequirement:
+          Exact: "1.1-SNAPSHOT"
+      - GroupId: eu.algites.lib.naming
+        ArtifactId: pub.lib.General_naming.convention.profile.algites
+        Usages: [product_api]
+        VersionRequirement:
+          Exact: "1.1-SNAPSHOT"
+      - GroupId: eu.algites.lib.common
+        ArtifactId: pub.lib.General_version.common.impl
+        Usages: [product_api]
+        VersionRequirement:
+          Exact: "1.1-SNAPSHOT"
+      - GroupId: eu.algites.lib.common
+        ArtifactId: pub.lib.General_version.scheme.algites.v1
+        Usages: [product_api]
+        VersionRequirement:
+          Exact: "1.1-SNAPSHOT"
+      - GroupId: eu.algites.lib.common
+        ArtifactId: pub.lib.General_version.scheme.maven
+        Usages: [product_api]
+        VersionRequirement:
+          Exact: "1.1-SNAPSHOT"
+      - GroupId: eu.algites.lib.common
+        ArtifactId: pub.lib.General_version.scheme.gradle
+        Usages: [product_api]
+        VersionRequirement:
+          Exact: "1.1-SNAPSHOT"
+      - GroupId: eu.algites.lib.common
+        ArtifactId: pub.lib.General_version.scheme.pep440
+        Usages: [product_api]
+        VersionRequirement:
+          Exact: "1.1-SNAPSHOT"
+      - GroupId: eu.algites.lib.common
+        ArtifactId: pub.lib.General_version.scheme.conversion.common
+        Usages: [product_api]
+        VersionRequirement:
+          Exact: "1.1-SNAPSHOT"
+      - GroupId: eu.algites.lib.common
+        ArtifactId: pub.lib.General_version.scheme.conversion.maven2gradle
+        Usages: [product_api]
+        VersionRequirement:
+          Exact: "1.1-SNAPSHOT"
+      - GroupId: eu.algites.lib.common
+        ArtifactId: pub.lib.General_version.scheme.conversion.algites2maven.v1
+        Usages: [product_api]
+        VersionRequirement:
+          Exact: "1.1-SNAPSHOT"
+      - GroupId: eu.algites.lib.common
+        ArtifactId: pub.lib.General_version.scheme.conversion.algites2gradle.v1
+        Usages: [product_api]
+        VersionRequirement:
+          Exact: "1.1-SNAPSHOT"
+      - GroupId: eu.algites.lib.common
+        ArtifactId: pub.lib.General_version.scheme.conversion.algites2pep440.v1
+        Usages: [product_api]
+        VersionRequirement:
+          Exact: "1.1-SNAPSHOT"
+      - GroupId: eu.algites.lib.security
+        ArtifactId: pub.lib.Security_credentials.core.impl
+        Usages: [product_runtime_only]
+        VersionRequirement:
+          Exact: "1.1-SNAPSHOT"
+      - GroupId: eu.algites.tool.security
+        ArtifactId: pub.tool.Security_credentials.gradle
+        Usages: [product_runtime_only]
+        VersionRequirement:
+          Exact: "1.1-SNAPSHOT"

@@ -6,7 +6,7 @@ The staged migration deliberately separates the portable Builder model from the 
 
 - `core/intf` contains public Java contracts, immutable model types, and canonical machine-readable definitions;
 - `core/impl` contains reusable Gradle-independent implementations such as inheritance resolution, model validation, and Java/Python dependency technology bridges;
-- `gradle` is the compiled Settings/Project integration edge; `devops/build/modustrobuild` supplies its runtime dependency bundle, and shared Gradle scripts provide execution adapters.
+- `runtime` is the source-free buildscript dependency bundle for 1.1; `gradle` is the compiled Settings/Project integration edge, while shared governance Gradle scripts still supply execution adapters pending their migration.
 
 Phase 2 connects the active Algites dependency metadata bridge to the new semantics: `DependencyKind: modustro`, merge-only `Usages`, `RequiredBuildOutputTypes`, and per-technology Java/Python mapping. Phase 3 adds `PreparedSourceSet`, the hard-wired Gradle-independent BuildOutput producer registry, portable production plans, hierarchical `BuildOutputTypes` selection, and the active Gradle adapter for Java JAR/source/Javadoc outputs and Python wheel/sdist outputs.
 
@@ -83,12 +83,15 @@ The Jackson YAML/JSON/XML loader, `AIcJacksonSchemaDataLoader`, and its TestNG t
 These layers perform representation mapping only; Builder interpretation and validation
 remain separate. The former `structureddata/jackson` artifact no longer exists.
 
-`builder-bootstrap.sh` remains an **emergency** source-based bootstrap. It still builds
-the legacy governance `yamldefs` and `modustrobuild` modules from a separate
-`pub.gov.Algites` checkout (override location using
-`MODUSTRO_LEGACY_GOVERNANCE_DIR`); it does **not** reintroduce the obsolete Jackson
-module or Builder core-interface artifacts from governance. Ordinary CI continues
-to bootstrap via the previously published governance Gradle plugin until cutover.
+`builder-bootstrap.sh` delegates to the **universal descriptor-driven**
+`devops/bootstrap/bootstrap.sh` for the Builder 1.1 artifacts (`core/intf`,
+`core/impl`, `runtime`, `gradle`). It no longer builds legacy governance
+`yamldefs` or `modustrobuild` from `pub.gov.Algites`. A `--root` selection
+limits only the requested sub-tree; dependencies outside it must already be
+prepared or be resolved from source by the common dependency graph.
+Normal CI continues to use its existing published governance plugin until the
+public governance applied scripts and their Defs/SDO generator integrations are
+migrated and a new 1.1 plugin has been published.
 
 
 ### Security 1.1 dependency transition
@@ -99,11 +102,9 @@ The compiled Builder Gradle adapter declares runtime dependencies on
 built with the current generators; the 1.0 credential artifacts must remain
 available only to the legacy consumers that explicitly use them.
 
-During the migration, the independent `builder-bootstrap.sh` substitutes the
-old `pub.lib.Security_credentials.coreimpl` coordinate still referenced by
-the source-based governance `modustrobuild` module with the new
-`pub.lib.Security_credentials.core.impl:1.1-SNAPSHOT`. This bridge is temporary;
-when governance is migrated, its own declared dependency must be corrected.
+The new Modustro-owned `runtime` bundle uses only 1.1 Security coordinates.
+The legacy governance `modustrobuild` remains outside the new Builder bootstrap;
+when governance is migrated, its old dependency declaration must be corrected.
 Publish `pub.lib.Security` and `pub.tool.Security` version 1.1 before invoking
 this Builder bootstrap in dependency mode `local`.
 
@@ -114,8 +115,38 @@ Use `bash devops/bootstrap/bootstrap.sh` to bootstrap all declared Builder
 artifacts; use `--root platform/builder/core` (or another declared artifact
 subtree) to limit generated cleanup and the resulting publications. For
 example `bash devops/bootstrap/bootstrap.sh --root platform/builder/core/intf
---prepare-only`. The exact same entry-point implementation is used by
-`pub.lib.General`. The legacy builder/codegen/gradle script locations are
-compatibility-only shims to the relocated `devops/bootstrap/` adapters.
-The generic cleanup empties only technology-generated `src/<branch>/java.gen`
+--prepare-only`. The entire active bootstrap engine (including the Defs and SDO orchestration,
+Java Gradle packaging, Python wheels, schema URL/URN mapping and uploads) is
+byte-identical to `pub.lib.General` and `pub.tool.General`. Repository-specific
+self-hosting policy is expressed solely by the optional
+`devops/bootstrap/bootstrap-specializations.yml`; Modustro does not need one.
+The legacy builder/codegen/gradle script locations are compatibility shims;
+the codegen shim performs full `--prepare-only` rather than running generators
+without validated prerequisites. The generic cleanup empties only technology-generated `src/<branch>/java.gen`
 and `python.gen` directories; errors stop publication, never restore old files.
+
+## Builder 1.1 publication and CI cutover
+
+1. Prepare and publish the **1.1** `pub.lib.General`, `pub.tool.General`,
+   `pub.lib.Security`, and `pub.tool.Security` dependencies first. The
+   new runtime bundle never loads their old 1.0 coordinates.
+2. In this checkout, run
+   `MODUSTRO_BOOTSTRAP_DEPENDENCY_MODE=source bash devops/bootstrap/bootstrap.sh --root platform/builder --prepare-only`.
+   This prepares the Java Builder `core.intf`, `core.impl`, `runtime`, and `gradle`
+   distributions and the Python `core.intf` wheel/sdist in isolation.
+3. After the local build and its complete tests pass, repeat with `--upload`
+   to publish them to the configured snapshot repositories. Version is
+   `1.1-SNAPSHOT` (Python snapshot uses the corresponding `1.1.dev...` instance).
+4. **Before enabling the new plugin in GitHub CI**, update the
+   `pub.gov.Algites` Settings bootstrap/template, the applied Gradle build
+   scripts and the source generation adapter to the current Defs/SDO Codegen 1.1
+   APIs. The old `modustrobuild:1.0-SNAPSHOT` and `gradleinit:1.0-SNAPSHOT`
+   must not remain on their classpaths. The private governance CI workflow
+   currently obtains these shared scripts from `pub.gov.Algites`; changing only
+   `priv.gov.Algites` cannot complete that cutover.
+5. Verify the new Settings plugin, generated code and `publishModustroSchemaSite`
+   in GitHub before enabling the full snapshot publication workflow.
+
+The repository's Builder source migration does **not** itself migrate all
+shared Gradle applied scripts out of `pub.gov.Algites`. Until that separate step,
+standalone bootstrap is the safe path to produce the versioned Builder artifacts.

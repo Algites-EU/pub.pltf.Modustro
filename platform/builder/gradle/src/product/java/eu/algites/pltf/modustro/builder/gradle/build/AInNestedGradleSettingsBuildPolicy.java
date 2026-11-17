@@ -1,4 +1,4 @@
-package eu.algites.pltf.modustro.builder.model.build;
+package eu.algites.pltf.modustro.builder.gradle.build;
 
 /** Defines how nested Gradle settings files affect Modustro build-domain discovery. */
 public enum AInNestedGradleSettingsBuildPolicy {

@@ -1,6 +1,5 @@
-package eu.algites.pltf.modustro.builder.build;
+package eu.algites.pltf.modustro.builder.gradle.build;
 
-import eu.algites.pltf.modustro.builder.model.build.AInGradleBuildPhase;
 import org.testng.SkipException;
 import org.testng.annotations.Test;
 

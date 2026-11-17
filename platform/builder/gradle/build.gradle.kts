@@ -7,7 +7,7 @@ plugins {
 group = "eu.algites.pltf.modustro.builder"
 version = providers.gradleProperty("modustro.gradle.version")
     .orElse(providers.gradleProperty("modustro.gradleinit.version"))
-    .orElse("1.0-SNAPSHOT").get()
+    .orElse("1.1-SNAPSHOT").get()
 
 kotlin {
     jvmToolchain(17)
@@ -17,7 +17,7 @@ kotlin {
 sourceSets.test { java.setSrcDirs(listOf("src/develop/java")); resources.setSrcDirs(listOf("src/develop/resources")) }
 
 sourceSets.main {
-    resources.srcDir("../../../../../repository/defaults")
+    resources.srcDir("src/product/resources")
     resources.include("algites-repository-defaults-public.yml")
 }
 
@@ -28,13 +28,14 @@ dependencies {
     if (project.findProject(":platform:builder:core:intf") != null) {
         api(project(":platform:builder:core:intf"))
     } else {
-        api("eu.algites.pltf.modustro.builder:pub.pltf.Modustro_platform.builder.core.intf:1.0-SNAPSHOT")
+        api("eu.algites.pltf.modustro.builder:pub.pltf.Modustro_platform.builder.core.intf:1.1-SNAPSHOT")
     }
-    api("eu.algites.tool.build:pub.gov.Algites_devops.build.modustrobuild:1.0-SNAPSHOT") {
-        // The still-published governance metadata depends on the incompatible
-        // legacy Security coordinate. The standalone Stage 0 bootstrap also
-        // substitutes that coordinate while governance is being migrated.
-        exclude(group = "eu.algites.lib.security", module = "pub.lib.Security_credentials.coreimpl")
+    // Keep the plugin's compiled Kotlin DSL and the applied Project scripts on
+    // one coherent 1.1 classpath. No obsolete governance modustrobuild:1.0.
+    if (project.findProject(":platform:builder:runtime") != null) {
+        api(project(":platform:builder:runtime"))
+    } else {
+        api("eu.algites.pltf.modustro.builder:pub.pltf.Modustro_platform.builder.runtime:1.1-SNAPSHOT")
     }
     // Include only the new credential generation. This is runtime integration;
     // the Gradle adapter does not depend on security APIs for compilation.

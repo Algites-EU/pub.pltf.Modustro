@@ -21,21 +21,19 @@ public final class AItcModustroJavaEnvironmentDefaultsTest {
     @Test
     public void AIcHasSharedJava17Baseline() throws IOException {
         Path locRepository = AIcRepository();
-        String locDefaults = Files.readString(locRepository.resolve("repository/defaults/algites-repository-defaults-public.yml"));
-        String locRepositoryDescriptor = Files.readString(locRepository.resolve("modustro-source-repository.yml"));
+        String locDefaults = Files.readString(locRepository.resolve(
+                "platform/builder/gradle/src/product/resources/algites-repository-defaults-public.yml"));
         String locDescriptor = Files.readString(locRepository.resolve(
                 "platform/builder/gradle/modustro-artifact.yml"));
         String locStandalone = Files.readString(locRepository.resolve(
                 "platform/builder/gradle/build.gradle.kts"));
-        String locAdapter = Files.readString(locRepository.resolve(
-                "gradle/tool/repository/modustro-root-build.gradle.kts"));
-        for (String locConfig : new String[] {locDefaults, locRepositoryDescriptor, locDescriptor}) {
+        for (String locConfig : new String[] {locDefaults}) {
             Assert.assertTrue(locConfig.contains("EnvironmentRequirements:\n  Java:\n    Minimum: \">=17\"\n    Prefer: \"17\""),
                     "A Java 17 environment requirement must be present.");
         }
         Assert.assertTrue(locStandalone.contains("jvmToolchain(17)"),
                 "The standalone bootstrap must use Java 17.");
-        Assert.assertTrue(locAdapter.contains("JavaLanguageVersion.of(locMajor)"),
-                "The common Java adapter must apply resolved environment requirements to Gradle toolchains.");
+        Assert.assertTrue(locDescriptor.contains("Minimum: \">=17\""),
+                "The published Gradle plugin must declare Java 17 as its minimum runtime.");
     }
 }

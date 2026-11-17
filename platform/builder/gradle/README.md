@@ -31,17 +31,18 @@ version declaration, not by the directory's common parent alone.
 
 ## Consumer bootstrap
 
-Copy the repository root `settings.gradle.kts` (also available as
-`gradle/tool/repository/modustro-bootstrap-settings.template.gradle.kts`). It loads
+Use the Modustro repository root `settings.gradle.kts` as the 1.1 consumer example.
+The governance `modustro-bootstrap-settings.template.gradle.kts` must be
+updated separately during CI cutover. The consumer Settings file loads
 one artifact and applies `eu.algites.pltf.modustro.builder.settings`. The artifact
-exports the existing `modustrobuild` dependency bundle transitively. No endpoint
+exports the new `pub.pltf.Modustro_platform.builder.runtime:1.1-SNAPSHOT` bundle transitively. No endpoint
 operation table, Builder imports, discovery-script URLs or independent Project
 buildscript dependencies belong in consumer Settings.
 
 Coordinate:
 
 ```text
-eu.algites.pltf.modustro.builder:pub.pltf.Modustro_platform.builder.gradle:1.0-SNAPSHOT
+eu.algites.pltf.modustro.builder:pub.pltf.Modustro_platform.builder.gradle:1.1-SNAPSHOT
 ```
 
 The Settings plugin owns one `AIcModustroGradleRuntime` per Gradle build domain.
@@ -58,6 +59,21 @@ applied Settings script is needed. Isolated build roots use the same small
 Settings bootstrap and construct their own runtime; live Builder objects are
 never handed across included-build boundaries.
 
+## 1.1 self-hosting requirements
+
+This module is built against the **Modustro-owned** 1.1 runtime bundle, not the
+legacy governance `modustrobuild:1.0-SNAPSHOT`. Its public defaults are bundled
+from `src/product/resources/algites-repository-defaults-public.yml`, pinned to
+`pub.gov.Algites` revision `c48a16651528eb537713bb6657742e84316299aa`.
+Governance may own future versions of these defaults, but the published plugin
+must never attempt a raw network fetch during Settings initialization.
+
+The standalone 1.1 bootstrap publishes `core.intf`, `core.impl`, `runtime` and
+`gradle` together in dependency order. To update an already-running CI, switch
+`pub.gov.Algites` applied build scripts and their generator adapters to 1.1
+before replacing the old published plugin; merely replacing the Settings JAR
+will not update the applied scripts or 1.0 Codegen APIs.
+
 ## First publication
 
 **Publish this artifact before activating the new root Settings in CI.
@@ -67,36 +83,35 @@ Settings bootstrap to the new coordinate. The Gradle plugin IDs
 `eu.algites.pltf.modustro.builder.settings` and
 `eu.algites.pltf.modustro.builder.repository` do **not** change.** Its
 first build must not load the consumer Settings that already require gradle.
-Publish CoreIntf and CoreImpl from the same checkpoint first: this integration
+Publish CoreIntf, CoreImpl and the new runtime bundle from the same checkpoint first: this integration
 uses their current publication-domain API. The accompanying bootstrap archive
 contains freshly rebuilt Maven artifacts and their matching POM/module metadata;
 older Core JARs cannot supply the new bridge contracts.
-The bootstrap script creates temporary independent Settings and builds this
-module against the already-published `modustrobuild` bundle. It does not rewrite
-the repository Settings and does not apply repository conventions to itself.
-Use JDK 17 and the repository's Gradle 9.2.1 wrapper:
+The bootstrap script creates temporary independent Settings and builds the
+1.1 modules against source projects and published external 1.1 dependencies.
+It does not rewrite repository Settings or load its plugin. Use JDK 17 and
+the repository's Gradle 9.2.1 wrapper:
 
 ```bash
-bash devops/bootstrap/bootstrap.sh \
-  :gradle:assemble :gradle:test :gradle:validatePlugins \
-  :gradle:generatePomFileForMavenJavaPublication
+MODUSTRO_BOOTSTRAP_DEPENDENCY_MODE=source \
+  bash devops/bootstrap/bootstrap.sh --root platform/builder --prepare-only
 ```
 
-The JAR is under this module's `build/libs/`; the Maven POM is
-`build/publications/mavenJava/pom-default.xml`. Publish the JAR **and** POM so the
-Builder runtime dependencies remain transitive. Plugin marker artifacts are not
-needed: consumers apply the plugin from the explicitly loaded Maven artifact.
-For a Maven upload using this bootstrap build:
+The isolated bootstrap stages and verifies each Maven JAR, POM and Gradle
+`.module` under `build/run/builder-bootstrap/`, then promotes them into the
+Modustro local Maven repository. The versioned runtime bundle relies on
+transitive POM/`.module` metadata; publishing its empty JAR alone is insufficient.
+Plugin marker artifacts are not required: consumers apply the plugin from
+the explicitly loaded Gradle artifact. To publish with the existing Cloudsmith
+CLI and credentials instead of preparing locally, use:
 
 ```bash
-export MODUSTRO_GRADLE_BOOTSTRAP_USERNAME='<repository username>'
-export MODUSTRO_GRADLE_BOOTSTRAP_PASSWORD='<repository password>'
-bash devops/bootstrap/bootstrap.sh \
-  :gradle:publishMavenJavaPublicationToBootstrapRepository \
-  -Pmodustro.gradle.bootstrapRepositoryUrl='<Maven upload URL>'
+MODUSTRO_BOOTSTRAP_DEPENDENCY_MODE=source \
+  bash devops/bootstrap/bootstrap.sh --root platform/builder --upload
 ```
 
-Without arguments the bootstrap script publishes to Maven Local. To consume that
+The `--prepare-only` action installs verified artifacts into the Modustro local
+repository without Cloudsmith upload. To consume that
 local bootstrap, explicitly enable `-Pmodustro.useMavenLocalForResolution=true`
 or `MODUSTRO_USE_MAVEN_LOCAL_FOR_RESOLUTION=true`. Maven Local is otherwise off.
 `MODUSTRO_GRADLE_EXECUTABLE` optionally selects another Gradle executable, and

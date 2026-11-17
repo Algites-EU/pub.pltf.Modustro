@@ -29,7 +29,7 @@ public final class AItcModustroBootstrapClasspathDependencyTest {
                 "src/product/kotlin/eu/algites/pltf/modustro/builder/gradle/AIcModustroGradleRuntime.kt"));
         String locGroup = "eu.algites.pltf.modustro.builder";
         String locArtifact = "pub.pltf.Modustro_platform.builder.core.intf";
-        String locVersion = "1.0-SNAPSHOT";
+        String locVersion = "1.1-SNAPSHOT";
         String locCoordinates = locGroup + ":" + locArtifact + ":" + locVersion;
 
         Assert.assertTrue(locRuntime.contains("model.subscription.AIcInputSubscription::class.java"),

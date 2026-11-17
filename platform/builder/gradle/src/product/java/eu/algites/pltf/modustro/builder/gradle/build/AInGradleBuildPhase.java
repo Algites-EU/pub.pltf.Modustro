@@ -1,4 +1,4 @@
-package eu.algites.pltf.modustro.builder.model.build;
+package eu.algites.pltf.modustro.builder.gradle.build;
 
 /** Ordered repository-wide Gradle execution phases used by Modustro Builder. */
 public enum AInGradleBuildPhase {
